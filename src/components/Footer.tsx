@@ -27,21 +27,21 @@ export function Footer() {
           </p>
           <div className="mt-6 flex items-center gap-3">
             <a
-              href="https://www.facebook.com/"
+              href="https://www.facebook.com/RotherShrine"
               aria-label="Rother Shrine on Facebook"
               className="flex h-9 w-9 items-center justify-center rounded-full border border-shrine-cream/25 transition-colors hover:border-shrine-gold-300 hover:text-shrine-gold-300"
             >
               <FacebookIcon className="h-4 w-4" />
             </a>
             <a
-              href="https://www.instagram.com/"
+              href="https://www.instagram.com/rothershrine/"
               aria-label="Rother Shrine on Instagram"
               className="flex h-9 w-9 items-center justify-center rounded-full border border-shrine-cream/25 transition-colors hover:border-shrine-gold-300 hover:text-shrine-gold-300"
             >
               <InstagramIcon className="h-4 w-4" />
             </a>
             <a
-              href="https://www.youtube.com/"
+              href="https://www.youtube.com/@rothershrine"
               aria-label="Rother Shrine on YouTube"
               className="flex h-9 w-9 items-center justify-center rounded-full border border-shrine-cream/25 transition-colors hover:border-shrine-gold-300 hover:text-shrine-gold-300"
             >
