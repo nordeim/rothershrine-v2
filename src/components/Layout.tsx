@@ -40,7 +40,7 @@ export function Layout() {
     <div className="min-h-screen bg-shrine-cream">
       <SkipLink />
       <Header />
-      <main id="main-content">
+      <main id="main-content" tabIndex={-1}>
         <Outlet />
       </main>
       <Footer />

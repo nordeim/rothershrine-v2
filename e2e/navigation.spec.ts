@@ -29,10 +29,13 @@ test.describe("navigation — desktop, keyboard, skip, footer", () => {
     await skipLink.focus();
     await expect(skipLink).toBeFocused();
 
-    // Activate skip link — should navigate to #main-content and main should exist
+    // Activate skip link — must NOT rewrite the hash (HashRouter would route
+    // /main-content to NotFound); focus moves to the main landmark instead.
     await skipLink.press("Enter");
-    // In this SPA, skip link jumps via hash; main-content must be visible, focus is tolerant
-    await expect(page.locator("#main-content")).toBeAttached();
+    await expect(page).not.toHaveURL(/#main-content/);
+    await expect(page).toHaveURL(/#\/$/);
+    await expect(page.getByRole("heading", { name: /shepherd who stayed/i })).toBeVisible();
+    await expect(page.locator("#main-content")).toBeFocused();
     // Pilgrimage link should be focusable via keyboard
     const pilgrimageLink = page.getByRole("link", { name: "Pilgrimage" }).first();
     await pilgrimageLink.focus();
