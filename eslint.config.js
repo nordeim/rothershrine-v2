@@ -5,7 +5,19 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
 
 export default tseslint.config(
-  { ignores: ["dist", "node_modules", "coverage", "playwright-report", "test-results"] },
+  // `skills` is vendored, git-tracked reference content (see skills/skills-catalog.md) —
+  // not project source. Ignored so `pnpm lint` passes on fresh clones; `tsc` already
+  // scopes to `include: ["src", …]` and vite watch ignores `**/skills/**`.
+  {
+    ignores: [
+      "dist",
+      "node_modules",
+      "coverage",
+      "playwright-report",
+      "test-results",
+      "skills",
+    ],
+  },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
