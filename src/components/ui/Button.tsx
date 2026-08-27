@@ -41,7 +41,7 @@ type NativeButtonProps = BaseProps &
 export type ButtonProps = LinkButtonProps | AnchorButtonProps | NativeButtonProps;
 
 const baseClasses =
-  "inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 text-sm font-semibold uppercase tracking-wide transition-all duration-300 hover:-translate-y-0.5 hover:shadow-shrine focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-shrine-gold-500 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-none";
+  "inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 text-sm font-semibold uppercase tracking-wide transition-[transform,box-shadow,background-color,color,border-color,opacity] duration-300 ease-out hover:-translate-y-0.5 hover:shadow-shrine focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-shrine-gold-500 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-none";
 
 export function Button(props: ButtonProps) {
   const classes = cn(baseClasses, variantClasses[props.variant ?? "primary"], props.className);

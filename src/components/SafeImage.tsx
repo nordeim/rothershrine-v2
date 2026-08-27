@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/utils/cn";
 
 interface SafeImageProps {
@@ -18,14 +18,23 @@ export function SafeImage({
 }: SafeImageProps) {
   const [current, setCurrent] = useState(src);
   const [loaded, setLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     setCurrent(src);
     setLoaded(false);
   }, [src]);
 
+  useEffect(() => {
+    const img = imgRef.current;
+    if (img && img.complete && img.naturalWidth > 0) {
+      setLoaded(true);
+    }
+  }, [current]);
+
   return (
     <img
+      ref={imgRef}
       src={current}
       alt={alt}
       loading={loading}

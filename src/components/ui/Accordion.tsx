@@ -18,7 +18,9 @@ export function Accordion({ items }: AccordionProps) {
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const target = event.target as HTMLElement;
     if (target.tagName !== "BUTTON") return;
-    const buttons = Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>("button"));
+    const buttons = Array.from(
+      event.currentTarget.querySelectorAll<HTMLButtonElement>("button[aria-expanded]"),
+    );
     const currentIndex = buttons.indexOf(target as HTMLButtonElement);
     if (currentIndex === -1) return;
     let nextIndex: number | null = null;

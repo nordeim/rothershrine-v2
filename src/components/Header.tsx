@@ -22,6 +22,8 @@ export function Header() {
   const [openMobileSection, setOpenMobileSection] = useState<string | null>(null);
   const menuId = useId();
   const drawerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
   const isHome = pathname === "/";
   const inverted = isHome && !scrolled;
 
@@ -38,15 +40,17 @@ export function Header() {
     };
   }, [mobileOpen]);
 
-  // B1 — mobile drawer focus trap + Escape
+  // B1 — mobile drawer focus trap + Escape + focus-return
   useEffect(() => {
     if (!mobileOpen) return;
     const drawer = drawerRef.current;
+    const triggerEl = triggerRef.current;
     if (!drawer) return;
+    openerRef.current = document.activeElement as HTMLElement | null;
     const selector = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
     const getFocusable = () =>
       Array.from(drawer.querySelectorAll<HTMLElement>(selector)).filter(
-        (el) => el.offsetParent !== null || el.getAttribute("aria-hidden") !== "true",
+        (el) => el.getAttribute("aria-hidden") !== "true",
       );
     // focus first element on open
     window.setTimeout(() => getFocusable()[0]?.focus(), 0);
@@ -71,7 +75,18 @@ export function Header() {
       }
     };
     drawer.addEventListener("keydown", onKeyDown);
-    return () => drawer.removeEventListener("keydown", onKeyDown);
+    return () => {
+      drawer.removeEventListener("keydown", onKeyDown);
+      // return focus to trigger if focus is still inside drawer (Escape / Tab-close)
+      const active = document.activeElement as HTMLElement | null;
+      const stillInside = active ? drawer.contains(active) : false;
+      const opener = openerRef.current;
+      if (stillInside && opener && document.contains(opener)) {
+        opener.focus();
+      } else if (triggerEl && stillInside && document.contains(triggerEl)) {
+        triggerEl.focus();
+      }
+    };
   }, [mobileOpen]);
 
   // B2 — close desktop dropdown on Escape
@@ -193,6 +208,7 @@ export function Header() {
             Give
           </Button>
           <button
+            ref={triggerRef}
             type="button"
             className="inline-flex h-11 w-11 items-center justify-center rounded-sm text-shrine-cream lg:hidden"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
