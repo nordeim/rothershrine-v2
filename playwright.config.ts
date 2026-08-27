@@ -18,6 +18,12 @@ export default defineConfig({
     screenshot: "only-on-failure",
     video: "retain-on-failure",
   },
+  // Cold-start headroom: on a fresh install the dev server's first page load
+  // triggers vite dep-optimization (~1900 modules incl. lucide-react), which can
+  // leave the SPA blank for >5s and flake the first navigations (observed on
+  // fresh clones; CI masks it via retries). Extends the failure-detection window
+  // only — assertions are unchanged.
+  expect: { timeout: 15_000 },
   webServer: {
     command: "pnpm exec vite --port 5173 --host 127.0.0.1 --strictPort",
     url: "http://localhost:5173",
