@@ -241,4 +241,4 @@ Private — all rights reserved. © National Shrine of Blessed Stanley Rother, A
 
 ---
 
-**Docs:** [`docs/prompts.md`](docs/prompts.md) · [`CLAUDE.md`](CLAUDE.md) · [`AGENTS.md`](AGENTS.md)
+**Docs:** [`rothershrine-v2_SKILL.md`](rothershrine-v2_SKILL.md) · [`CLAUDE.md`](CLAUDE.md) · [`AGENTS.md`](AGENTS.md)
