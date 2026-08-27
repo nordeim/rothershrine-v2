@@ -4,7 +4,7 @@ display_name: Blessed Stanley Rother Shrine — National Shrine, Oklahoma City
 version: 1.3.0
 last_updated: 2026-08-27T12:00Z
 project_state: static SPA — 49 tests (29 unit + 20 E2E), lint+typecheck+test+test:coverage+test:e2e+build green on fresh clones, singlefile deploy (pinned exact, pnpm 11) — remediated M1+C0+H0 (vitest 3.2.6 + coverage-v8 + playwright 1.55.1), then fresh-clone audit H1+H2+M1–M6 (see docs/fresh-clone-audit-2026-08-27.md)
-stack: react 19.2.8 / vite 7.3.6 / tailwind 4.3.3 (@tailwindcss/vite 4.1.17) / typescript 5.9.3 / react-router 7.18.2 / singlefile 2.3.3 / eslint 9.23 flat / vitest 3.2.6 jsdom / testing-library 16.2.0 / playwright 1.55.1 chromium (20 E2E)
+stack: react 19.2.8 / vite 7.3.6 / tailwind 4.3.3 (@tailwindcss/vite 4.1.17) / typescript 5.9.3 / react-router 7.18.2 / singlefile 2.3.3 / eslint 9.39.5 flat / vitest 3.2.6 jsdom / testing-library 16.2.0 / playwright 1.55.1 chromium (20 E2E)
 rendering: static SPA (HashRouter, no SSR)
 data_layer: file-backed typed arrays in src/data/*
 deploy: vite-plugin-singlefile → dist/index.html + dist/images/ → GH Pages / S3 (publicDir copy — not inlined)
@@ -93,7 +93,7 @@ git clone <repo-url> rothershrine && cd rothershrine
 pnpm install --frozen-lockfile  # deterministic — versions pinned exact in package.json (pnpm 11.0.0)
 # npm users: `npm ci --legacy-peer-deps` (typescript-eslint 8.28.0 peer predates TS 5.9)
 pnpm dev                # → http://localhost:5173 (Vite HMR)
-pnpm lint               # → eslint 9.23 flat — must be clean (--max-warnings 0)
+pnpm lint               # → eslint 9.39.5 flat — must be clean (--max-warnings 0)
 pnpm typecheck          # → tsc --noEmit — must be silent
 pnpm test               # → vitest 3.2.6 jsdom — 29 tests (6 files)
 pnpm test:e2e           # → playwright 1.55.1 chromium — 20 tests (4 specs: smoke 7 + navigation 5 + what-to-see 4 + give-faq 4)
@@ -107,7 +107,7 @@ pnpm preview            # → http://localhost:4173 (preview dist)
 |---|---|---|
 | `vite.config.ts` | `plugins: [react(), tailwindcss(), viteSingleFile()]` + `resolve.alias["@"]` + `test { globals, jsdom, setupFiles: ["src/test/setup.ts"], include: ["src/**/*.{test,spec}.{ts,tsx}"], exclude: ["e2e/**", "node_modules/**", "playwright-report/**", "test-results/**"] }` + `server.watch.ignored ["**/skills/**", "**/dist/**", "**/playwright-report/**", "**/test-results/**", "**/coverage/**"]` | **Order matters.** `@` must stay in sync (`vite.config.ts` ↔ `tsconfig.json` `paths`). `server.watch.ignored` prevents `ENOSPC` from the vendored `skills/` tree (large `.venv`). `test` setup via `src/test/setup.ts`. |
 | `tsconfig.json` | `ES2020`/`ESNext`/`bundler`/`react-jsx`/`strict`/`noUnused*`/`isolatedModules`/`noEmit` + `include ["src","vite.config.ts","eslint.config.js","playwright.config.ts"]` + `types ["node","vitest/globals"]` + `paths {"@/*":["src/*"]}` + `baseUrl:"."` | Adding a file outside `src/` requires expanding `include`. `paths` ↔ `vite.config.ts` alias must stay synced. |
-| `eslint.config.js` | flat config (`eslint 9.23.0` + `@eslint/js 9.23.0` + `typescript-eslint 8.28.0` + `react-hooks 5.2.0` + `react-refresh 0.4.19` + `globals 16.1.0`) — ignores `dist/node_modules/coverage/playwright-report/test-results` **and `skills`** (vendored, git-tracked reference content — not project source) | `eslint . --max-warnings 0` — flat. `pnpm lint:fix` → `eslint . --fix`. Ignoring `skills` is what keeps the gate green on fresh clones. |
+| `eslint.config.js` | flat config (`eslint 9.39.5` + `@eslint/js 9.39.5` + `typescript-eslint 8.28.0` + `react-hooks 5.2.0` + `react-refresh 0.4.19` + `globals 16.1.0`) — ignores `dist/node_modules/coverage/playwright-report/test-results` **and `skills`** (vendored, git-tracked reference content — not project source) | `eslint . --max-warnings 0` — flat. `pnpm lint:fix` → `eslint . --fix`. Ignoring `skills` is what keeps the gate green on fresh clones. |
 | `playwright.config.ts` | `playwright 1.55.1` (`@playwright/test 1.55.1` chromium, `webServer` → `pnpm exec vite --port 5173 --host 127.0.0.1 --strictPort`) | `testDir: e2e`, `baseURL: http://localhost:5173`, `reuseExistingServer: !CI`, `expect.timeout: 15s` (cold-start headroom), `trace/video on failure`. `pnpm test:e2e:ui` / `pnpm test:e2e:report`. |
 | `e2e/` | 20 tests — `smoke.spec.ts` (7), `navigation.spec.ts` (5), `what-to-see.spec.ts` (4), `give-faq.spec.ts` (4) + `helpers.ts` | Covers `HashRouter` double-hash, desktop hover, keyboard, SkipLink, footer, `SafeImage` CDN fallback. |
 | `.github/workflows/ci.yml` | CI: lint → typecheck → test → test:e2e (chromium) → build + artifacts | `pnpm 11`, `node 24`, `playwright install --with-deps chromium`, `concurrency: cancel-in-progress`. Pre-push gate: `pnpm lint && pnpm typecheck && pnpm test && pnpm test:e2e && pnpm build`. |
@@ -460,7 +460,7 @@ pnpm build && pnpm preview  # :4173
 Run in order — every step must be green before pushing `main` (`main` is the deploy branch).
 
 ```bash
-pnpm lint                      # 1 — eslint 9.23 flat --max-warnings 0
+pnpm lint                      # 1 — eslint 9.39.5 flat --max-warnings 0
 pnpm typecheck                 # 2 — tsc --noEmit (strict + noUnusedLocals/Params)
 pnpm test                      # 3 — vitest 3.2.6 jsdom — 29 tests (6 files: cn 5, nav 6, content 5, site 4, Button 6, SkipLink 3)
 pnpm test:e2e                  # 4 — playwright 1.55.1 chromium — 20 tests (4 specs: smoke 7, navigation 5, what-to-see 4, give-faq 4)
@@ -473,7 +473,7 @@ git push origin main           # 9 — deploy (GH Pages / S3 upload of dist/inde
 
 | Category | Check | How |
 |---|---|---|
-| Lint | `pnpm lint` clean | `eslint 9.23.0` flat `eslint . --max-warnings 0` (`typescript-eslint 8.28.0` + `react-hooks 5.2.0`) |
+| Lint | `pnpm lint` clean | `eslint 9.39.5` flat `eslint . --max-warnings 0` (`typescript-eslint 8.28.0` + `react-hooks 5.2.0`) |
 | Types | `pnpm typecheck` (`npx tsc --noEmit`) clean | `strict` + `noUnusedLocals`/`noUnusedParameters`/`noFallthroughCasesInSwitch`/`isolatedModules`/`noEmit` pass; `tsconfig.json` `include` covers `src`, `vite.config.ts`, `eslint.config.js`, `playwright.config.ts` |
 | Tests | `pnpm test` — 29 passed (6 files) | `vitest 3.2.6` `jsdom 26.1.0` + `setupFiles: ["src/test/setup.ts"]` (`@testing-library/react 16.2.0`, `@testing-library/jest-dom 6.6.3`) |
 | E2E | `pnpm test:e2e` — 20 passed (chromium, 4 specs) | `playwright 1.55.1` + `webServer` → `pnpm exec vite --port 5173 --host 127.0.0.1 --strictPort` + `expect.timeout: 15s` + `trace/video on failure`; `helpers.ts` shared |

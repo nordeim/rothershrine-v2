@@ -42,7 +42,7 @@ Every row below is implemented — no placeholders.
 | Bundling | vite-plugin-singlefile | `2.3.3` | Inlines JS+CSS into `dist/index.html` (`public/images/` copied to `dist/images/`) |
 | Testing | Vitest + Testing Library + jsdom | `3.2.6` / `16.2.0` / `26.1.0` | `globals: true`, `environment: jsdom`, `setupFiles: src/test/setup.ts` (6 files / 29 tests) |
 | E2E | Playwright | `1.55.1` | `chromium`, `webServer` → `pnpm exec vite --port 5173 --host 127.0.0.1 --strictPort`, `e2e/` (20 tests: smoke 7 + navigation 5 + what-to-see 4 + give-faq 4) |
-| Linting | ESLint flat + typescript-eslint + react-hooks | `9.23.0` / `8.28.0` / `5.2.0` | `eslint . --max-warnings 0`, `eslint.config.js` |
+| Linting | ESLint flat + typescript-eslint + react-hooks | `9.39.5` / `8.28.0` / `5.2.0` | `eslint . --max-warnings 0`, `eslint.config.js` |
 | Fonts | Google Fonts | — | `Fraunces` (display) + `Source Sans 3` (body) via `index.html` |
 
 Versions pinned exact in `package.json` and match `pnpm-lock.yaml` (`--frozen-lockfile` in CI) + `package-lock.json`.

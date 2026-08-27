@@ -4,7 +4,7 @@
 
 ## Stack
 
-`React 19.2.8` + `Vite 7.3.6` + `Tailwind CSS 4.3.3` (`@tailwindcss/vite 4.1.17`, CSS-first `@theme` inline in `src/index.css`) + `TypeScript 5.9.3` strict + `React Router 7.18.2` `HashRouter` + `vite-plugin-singlefile 2.3.3` (primary `dist/index.html` + `dist/images/` for GH Pages / S3) + `eslint 9.23.0` flat + `vitest 3.2.6` (`jsdom 26.1.0`) + `@testing-library/react 16.2.0` + `playwright 1.55.1` (chromium) · alias `@` → `src/` (sync `vite.config.ts` `path.resolve(__dirname,"src")` ↔ `tsconfig.json` `paths: {"@/*":["src/*"]}` + `baseUrl:"."`) · `pnpm 11.0.0` (`packageManager` + `engines node>=20`, `pnpm-lock.yaml` committed, `--frozen-lockfile` in CI), `npm` works · all deps pinned exact — no `^` in `package.json` (re-pin on upgrade, update docs)
+`React 19.2.8` + `Vite 7.3.6` + `Tailwind CSS 4.3.3` (`@tailwindcss/vite 4.1.17`, CSS-first `@theme` inline in `src/index.css`) + `TypeScript 5.9.3` strict + `React Router 7.18.2` `HashRouter` + `vite-plugin-singlefile 2.3.3` (primary `dist/index.html` + `dist/images/` for GH Pages / S3) + `eslint 9.39.5` flat + `vitest 3.2.6` (`jsdom 26.1.0`) + `@testing-library/react 16.2.0` + `playwright 1.55.1` (chromium) · alias `@` → `src/` (sync `vite.config.ts` `path.resolve(__dirname,"src")` ↔ `tsconfig.json` `paths: {"@/*":["src/*"]}` + `baseUrl:"."`) · `pnpm 11.0.0` (`packageManager` + `engines node>=20`, `pnpm-lock.yaml` committed, `--frozen-lockfile` in CI), `npm` works · all deps pinned exact — no `^` in `package.json` (re-pin on upgrade, update docs)
 
 ## Commands
 
@@ -57,7 +57,7 @@ public/images/         # 4 files: hero-shrine.jpg, chapel-light.jpg, oklahoma-wh
 - **Alias `@` must stay in sync** — `vite.config.ts` (`path.resolve(__dirname,"src")`) ↔ `tsconfig.json` (`paths: {"@/*":["src/*"]}`, `baseUrl:"."`) — change both.
 - **Tailwind v4 has no `tailwind.config.js`** — tokens live only in `src/index.css` `@theme`. Don't add arbitrary `bg-[#...]`; extend `@theme` with a named `shrine-*` token.
 - **TS strict will fail on unused code** — `noUnusedLocals:true` + `noUnusedParameters:true` + `noFallthroughCasesInSwitch:true` + `isolatedModules:true` + `noEmit:true`. Clean unused vars/params before commit.
-- **Test/lint harness: `eslint 9.23.0` flat + `vitest 3.2.6` (jsdom) + `@testing-library/react 16.2.0` + `playwright 1.55.1` (chromium)** — gate is `lint && typecheck && test && test:e2e && build` (`29 unit` via `src/test/setup.ts` + `20 E2E` via `e2e/`). CI mirrors this in `.github/workflows/ci.yml` (Node 24, pnpm 11).
+- **Test/lint harness: `eslint 9.39.5` flat + `vitest 3.2.6` (jsdom) + `@testing-library/react 16.2.0` + `playwright 1.55.1` (chromium)** — gate is `lint && typecheck && test && test:e2e && build` (`29 unit` via `src/test/setup.ts` + `20 E2E` via `e2e/`). CI mirrors this in `.github/workflows/ci.yml` (Node 24, pnpm 11).
 - **`skills` is vendored, git-tracked reference content** (not project source; `skills/skills-catalog.md` is the index). Tooling ignores it: `eslint.config.js` `ignores` + `vite.config.ts` `server.watch.ignored`; `tsc` only includes `src` + configs. Don't lint or import from it.
 - **Google Fonts loaded in `index.html`** — `Fraunces` (display) + `Source Sans 3` (body). Don't add runtime font loaders in components.
 - **`Layout.tsx` handles hash scroll** — double-hash aware (`#/what-to-see#pilgrim-center` → split on `#` + strip `/`) + `setTimeout 80ms` + fallback `window.scrollTo`. Preserve when extending layout.

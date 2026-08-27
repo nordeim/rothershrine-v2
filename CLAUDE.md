@@ -6,7 +6,7 @@ IMPORTANT: File is read fresh for every conversation. Be brief and practical.
 
 Clone / pilgrimage site for the **National Shrine of Blessed Stanley Rother** (Oklahoma City). Tells the story of the Oklahoma farm boy turned missionary martyr in Santiago Atitlán, Guatemala — martyred July 28, 1981, beatified Sept 23, 2017 — and guides pilgrims through the Pilgrim Center, Shrine Church & Tomb Chapel, and Tepeyac Hill.
 
-**Stack:** React 19.2.8 + Vite 7.3.6 + Tailwind CSS 4.3.3 (`@tailwindcss/vite 4.1.17`) + TypeScript 5.9.3 (strict) + React Router 7.18.2 (HashRouter) + `vite-plugin-singlefile 2.3.3` (primary `dist/index.html` + `dist/images/`) + `tailwind-merge 3.6.0` + `clsx 2.1.1` + `lucide-react 1.34.0` + `eslint 9.23.0` flat (`typescript-eslint 8.28.0` + `eslint-plugin-react-hooks 5.2.0` + `eslint-plugin-react-refresh 0.4.19` + `globals 16.1.0`) + `vitest 3.2.6` (`jsdom 26.1.0`) + `@testing-library/react 16.2.0` + `@testing-library/jest-dom 6.6.3` + `playwright 1.55.1` (chromium) · pnpm 11.0.0 (`packageManager` + `engines node>=20`, `--frozen-lockfile` in CI) · Alias `@` → `src/` · all deps pinned exact — no `^` in `package.json`
+**Stack:** React 19.2.8 + Vite 7.3.6 + Tailwind CSS 4.3.3 (`@tailwindcss/vite 4.1.17`) + TypeScript 5.9.3 (strict) + React Router 7.18.2 (HashRouter) + `vite-plugin-singlefile 2.3.3` (primary `dist/index.html` + `dist/images/`) + `tailwind-merge 3.6.0` + `clsx 2.1.1` + `lucide-react 1.34.0` + `eslint 9.39.5` flat (`typescript-eslint 8.28.0` + `eslint-plugin-react-hooks 5.2.0` + `eslint-plugin-react-refresh 0.4.19` + `globals 16.1.0`) + `vitest 3.2.6` (`jsdom 26.1.0`) + `@testing-library/react 16.2.0` + `@testing-library/jest-dom 6.6.3` + `playwright 1.55.1` (chromium) · pnpm 11.0.0 (`packageManager` + `engines node>=20`, `--frozen-lockfile` in CI) · Alias `@` → `src/` · all deps pinned exact — no `^` in `package.json`
 
 > `README.md` is the visitor-facing overview; this file is the authoritative agent onboarding doc. Keep both in sync with `package.json`, `vite.config.ts`, and `tsconfig.json`.
 
@@ -130,7 +130,7 @@ No backend, no DB, no `.env` contract yet. If env vars are added, document them 
 
 ### Adding Tooling (wired — 2026-08-27)
 
-Wired: `eslint 9.23.0` flat + `typescript-eslint 8.28.0` + `eslint-plugin-react-hooks 5.2.0` + `eslint-plugin-react-refresh 0.4.19` + `globals 16.1.0` → `eslint.config.js` (flat) + `vitest 3.2.6` + `jsdom 26.1.0` + `@testing-library/react 16.2.0` + `@testing-library/jest-dom 6.6.3` + `@testing-library/user-event 14.5.2` → `vite.config.ts` `test` + `src/test/setup.ts` (`@testing-library/jest-dom/vitest` + `IntersectionObserver` mock + `window.scrollTo` stub) + `playwright 1.55.1` (chromium, `playwright.config.ts` + `e2e/`). Scripts added: `typecheck`, `lint`, `lint:fix`, `test`, `test:watch`, `test:coverage`, `test:e2e`, `test:e2e:ui`, `test:e2e:report`.
+Wired: `eslint 9.39.5` flat + `typescript-eslint 8.28.0` + `eslint-plugin-react-hooks 5.2.0` + `eslint-plugin-react-refresh 0.4.19` + `globals 16.1.0` → `eslint.config.js` (flat) + `vitest 3.2.6` + `jsdom 26.1.0` + `@testing-library/react 16.2.0` + `@testing-library/jest-dom 6.6.3` + `@testing-library/user-event 14.5.2` → `vite.config.ts` `test` + `src/test/setup.ts` (`@testing-library/jest-dom/vitest` + `IntersectionObserver` mock + `window.scrollTo` stub) + `playwright 1.55.1` (chromium, `playwright.config.ts` + `e2e/`). Scripts added: `typecheck`, `lint`, `lint:fix`, `test`, `test:watch`, `test:coverage`, `test:e2e`, `test:e2e:ui`, `test:e2e:report`.
 
 Previous bootstrap (for reference):
 
@@ -171,7 +171,7 @@ Conventions: `*.test.tsx` adjacent to source, `__mocks__` only when isolating `r
 
 ### Linting & Formatting (wired)
 
-`eslint 9.23.0` flat config (`eslint.config.js`) — `typescript-eslint 8.28.0` + `eslint-plugin-react-hooks 5.2.0` + `eslint-plugin-react-refresh 0.4.19` + `globals 16.1.0` (ignores `dist`, `node_modules`, `coverage`, `playwright-report`, `test-results`). Run `pnpm lint` (`eslint . --max-warnings 0`) and `pnpm lint:fix` (`eslint . --fix`) for auto-fix. Gate for pre-ship (5-step):
+`eslint 9.39.5` flat config (`eslint.config.js`) — `typescript-eslint 8.28.0` + `eslint-plugin-react-hooks 5.2.0` + `eslint-plugin-react-refresh 0.4.19` + `globals 16.1.0` (ignores `dist`, `node_modules`, `coverage`, `playwright-report`, `test-results`). Run `pnpm lint` (`eslint . --max-warnings 0`) and `pnpm lint:fix` (`eslint . --fix`) for auto-fix. Gate for pre-ship (5-step):
 
 ```bash
 pnpm lint               # eslint flat — no warnings
