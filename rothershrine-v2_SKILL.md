@@ -2,8 +2,8 @@
 name: rothershrine
 display_name: Blessed Stanley Rother Shrine — National Shrine, Oklahoma City
 version: 1.3.0
-last_updated: 2026-08-28T10:20Z
-project_state: static SPA — 46 tests (26 unit + 20 E2E), lint+typecheck+test+test:coverage+test:e2e+build green, singlefile deploy (pinned exact, pnpm 11) — remediated M1+C0+H0 (vitest 3.2.6 + coverage-v8 + playwright 1.55.1)
+last_updated: 2026-08-27T12:00Z
+project_state: static SPA — 49 tests (29 unit + 20 E2E), lint+typecheck+test+test:coverage+test:e2e+build green on fresh clones, singlefile deploy (pinned exact, pnpm 11) — remediated M1+C0+H0 (vitest 3.2.6 + coverage-v8 + playwright 1.55.1), then fresh-clone audit H1+H2+M1–M6 (see docs/fresh-clone-audit-2026-08-27.md)
 stack: react 19.2.8 / vite 7.3.6 / tailwind 4.3.3 (@tailwindcss/vite 4.1.17) / typescript 5.9.3 / react-router 7.18.2 / singlefile 2.3.3 / eslint 9.23 flat / vitest 3.2.6 jsdom / testing-library 16.2.0 / playwright 1.55.1 chromium (20 E2E)
 rendering: static SPA (HashRouter, no SSR)
 data_layer: file-backed typed arrays in src/data/*
@@ -75,12 +75,12 @@ deploy: vite-plugin-singlefile → dist/index.html + dist/images/ → GH Pages /
 | Language | `typescript` / `@types/react` / `@types/react-dom` / `@types/node` | `5.9.3` / `19.2.18` / `19.2.5` / `22.20.1` | `strict` + `noUnusedLocals/Params` — breaches fail `tsc` |
 | Icons | `lucide-react` | `1.34.0` | Header/footer + `Home` quick-facts |
 | Utils | `clsx` / `tailwind-merge` | `2.1.1` / `3.6.0` | `cn()` = `twMerge(clsx(...))` — only merge path |
-| Bundling | `vite-plugin-singlefile` | `2.3.3` | Inlines JS+CSS into `dist/index.html` (~370 kB, gzip ~108 kB; `public/images/` → `dist/images/`) |
+| Bundling | `vite-plugin-singlefile` | `2.3.3` | Inlines JS+CSS into `dist/index.html` (~372 kB, gzip ~109 kB; `public/images/` → `dist/images/`) |
 | Fonts | Google Fonts (CDN, `index.html`) | — | `Fraunces` 400/500/600/700 + `Source Sans 3` 400/500/600/700; no runtime loader |
 
 > All versions pinned exact (no `^`) in `package.json` (`pnpm@11.0.0`, `engines: node>=20`). Re-pin on upgrade; `pnpm --frozen-lockfile` in CI verifies lockfile.
 
-**Environment:** No `.env.example`, no DB, no auth, no `docker`/`compose`. `pnpm` preferred (`--frozen-lockfile` in CI — versions pinned exact in `package.json`), `npm` works via `npm ci`. `skills/` is a symlink to `~/.pi/agent/skills` (ignored).
+**Environment:** No `.env.example`, no DB, no auth, no `docker`/`compose`. `pnpm` is the supported package manager (`--frozen-lockfile` in CI — versions pinned exact in `package.json`). `npm ci` fails on these exact pins (typescript-eslint 8.28.0 peer range predates TypeScript 5.9) — use `npm ci --legacy-peer-deps` if npm is unavoidable. `skills/` is vendored, git-tracked reference content (not project source) — tooling ignores it.
 
 ---
 
@@ -91,11 +91,11 @@ deploy: vite-plugin-singlefile → dist/index.html + dist/images/ → GH Pages /
 ```bash
 git clone <repo-url> rothershrine && cd rothershrine
 pnpm install --frozen-lockfile  # deterministic — versions pinned exact in package.json (pnpm 11.0.0)
-# or: npm ci
+# npm users: `npm ci --legacy-peer-deps` (typescript-eslint 8.28.0 peer predates TS 5.9)
 pnpm dev                # → http://localhost:5173 (Vite HMR)
 pnpm lint               # → eslint 9.23 flat — must be clean (--max-warnings 0)
 pnpm typecheck          # → tsc --noEmit — must be silent
-pnpm test               # → vitest 3.2.6 jsdom — 26 tests (5 files)
+pnpm test               # → vitest 3.2.6 jsdom — 29 tests (6 files)
 pnpm test:e2e           # → playwright 1.55.1 chromium — 20 tests (4 specs: smoke 7 + navigation 5 + what-to-see 4 + give-faq 4)
 pnpm build              # → dist/index.html + dist/images/ (viteSingleFile 2.3.3 inlines JS+CSS; publicDir copied)
 pnpm preview            # → http://localhost:4173 (preview dist)
@@ -105,16 +105,16 @@ pnpm preview            # → http://localhost:4173 (preview dist)
 
 | File | Purpose | Gotcha |
 |---|---|---|
-| `vite.config.ts` | `plugins: [react(), tailwindcss(), viteSingleFile()]` + `resolve.alias["@"]` + `test { globals, jsdom, setupFiles: ["src/test/setup.ts"], include: ["src/**/*.{test,spec}.{ts,tsx}"], exclude: ["e2e/**", "node_modules/**", "playwright-report/**", "test-results/**"] }` + `server.watch.ignored ["**/skills/**", "**/dist/**", "**/playwright-report/**", "**/test-results/**", "**/coverage/**"]` | **Order matters.** `@` must stay in sync (`vite.config.ts` ↔ `tsconfig.json` `paths`). `server.watch.ignored` prevents `ENOSPC` from `skills` symlink (large `.venv`). `test` setup via `src/test/setup.ts`. |
+| `vite.config.ts` | `plugins: [react(), tailwindcss(), viteSingleFile()]` + `resolve.alias["@"]` + `test { globals, jsdom, setupFiles: ["src/test/setup.ts"], include: ["src/**/*.{test,spec}.{ts,tsx}"], exclude: ["e2e/**", "node_modules/**", "playwright-report/**", "test-results/**"] }` + `server.watch.ignored ["**/skills/**", "**/dist/**", "**/playwright-report/**", "**/test-results/**", "**/coverage/**"]` | **Order matters.** `@` must stay in sync (`vite.config.ts` ↔ `tsconfig.json` `paths`). `server.watch.ignored` prevents `ENOSPC` from the vendored `skills/` tree (large `.venv`). `test` setup via `src/test/setup.ts`. |
 | `tsconfig.json` | `ES2020`/`ESNext`/`bundler`/`react-jsx`/`strict`/`noUnused*`/`isolatedModules`/`noEmit` + `include ["src","vite.config.ts","eslint.config.js","playwright.config.ts"]` + `types ["node","vitest/globals"]` + `paths {"@/*":["src/*"]}` + `baseUrl:"."` | Adding a file outside `src/` requires expanding `include`. `paths` ↔ `vite.config.ts` alias must stay synced. |
-| `eslint.config.js` | flat config (`eslint 9.23.0` + `@eslint/js 9.23.0` + `typescript-eslint 8.28.0` + `react-hooks 5.2.0` + `react-refresh 0.4.19` + `globals 16.1.0`) — ignores `dist/coverage/playwright-report/test-results` | `eslint . --max-warnings 0` — flat. `pnpm lint:fix` → `eslint . --fix`. |
-| `playwright.config.ts` | `playwright 1.55.1` (`@playwright/test 1.55.1` chromium, `webServer` → `pnpm exec vite :5173`) | `testDir: e2e`, `baseURL: http://localhost:5173`, `reuseExistingServer: !CI`, `trace/video on failure`. `pnpm test:e2e:ui` / `pnpm test:e2e:report`. |
+| `eslint.config.js` | flat config (`eslint 9.23.0` + `@eslint/js 9.23.0` + `typescript-eslint 8.28.0` + `react-hooks 5.2.0` + `react-refresh 0.4.19` + `globals 16.1.0`) — ignores `dist/node_modules/coverage/playwright-report/test-results` **and `skills`** (vendored, git-tracked reference content — not project source) | `eslint . --max-warnings 0` — flat. `pnpm lint:fix` → `eslint . --fix`. Ignoring `skills` is what keeps the gate green on fresh clones. |
+| `playwright.config.ts` | `playwright 1.55.1` (`@playwright/test 1.55.1` chromium, `webServer` → `pnpm exec vite --port 5173 --host 127.0.0.1 --strictPort`) | `testDir: e2e`, `baseURL: http://localhost:5173`, `reuseExistingServer: !CI`, `expect.timeout: 15s` (cold-start headroom), `trace/video on failure`. `pnpm test:e2e:ui` / `pnpm test:e2e:report`. |
 | `e2e/` | 20 tests — `smoke.spec.ts` (7), `navigation.spec.ts` (5), `what-to-see.spec.ts` (4), `give-faq.spec.ts` (4) + `helpers.ts` | Covers `HashRouter` double-hash, desktop hover, keyboard, SkipLink, footer, `SafeImage` CDN fallback. |
 | `.github/workflows/ci.yml` | CI: lint → typecheck → test → test:e2e (chromium) → build + artifacts | `pnpm 11`, `node 24`, `playwright install --with-deps chromium`, `concurrency: cancel-in-progress`. Pre-push gate: `pnpm lint && pnpm typecheck && pnpm test && pnpm test:e2e && pnpm build`. |
 | `src/test/setup.ts` | vitest 3.2.6 setup (`@testing-library/jest-dom 6.6.3` + `IntersectionObserver` mock + `jsdom 26.1.0`) | jsdom lacks `scrollTo`/`IntersectionObserver` — mock there. Referenced by `vite.config.ts` `test.setupFiles`. |
 | `src/index.css` | `@import "tailwindcss"` + `@theme` (24 colors + 2 shadows) + `@layer base/utilities` (11 utilities incl. `gold-rule`/`gold-rule-left`) | Only token source; no `tailwind.config.*` exists. |
-| `index.html` | `lang en`, `viewport`, `meta description`, preconnect `fonts.googleapis.com`, `Fraunces`+`Source Sans 3`, `#root` + `src/main.tsx` | Fonts belong here, not in JS. |
-| `.gitignore` | Ignores `node_modules/`, `.next/`, `dist/`, `skills/` + `nohup.out`, `.venv`, `bak.git/` | `skills` symlink must not be committed. |
+| `index.html` | `lang en`, `viewport`, `meta description`, scoped `Content-Security-Policy` meta + `referrer` meta, data-URI SVG favicon, preconnect `fonts.googleapis.com`, `Fraunces`+`Source Sans 3`, `#root` + `src/main.tsx` | Fonts + CSP belong here, not in JS. The CSP allows inline script/style (singlefile build), Google Fonts, `img-src https:` (Pexels), and `frame-src https://www.google.com` (map embed). |
+| `.gitignore` | Ignores `node_modules/`, `.next/`, `dist/`, `skills/` + `nohup.out`, `.venv`, `bak.git/` | Note: the `skills/` ignore entry is ineffective for already-tracked files — `skills/` **is** committed (2345 files of vendored reference content). Tooling, not git, is the exclusion point. |
 
 **Env vars:** None. `VITE_*` prefix convention applies if added; guard with `src/env.d.ts` (`import.meta.env`). Document new vars in `README.md` + `CLAUDE.md` + this §.
 
@@ -212,23 +212,23 @@ index.html (#root) → src/main.tsx (StrictMode+createRoot)
 
 No global store, no API layer, no `server/` — add only with an ADR.
 
-### 5.2 Directory Inventory (38 files in `src/` — 31 source .ts/.tsx + 5 tests + 1 setup + 1 css; + `e2e/` 4 specs + configs)
+### 5.2 Directory Inventory (39 files in `src/` — 32 source .ts/.tsx + 6 tests + 1 setup + 1 css; + `e2e/` 4 specs + configs)
 
 ```
-src/ (38 files)
-  App.tsx                 # HashRouter + 15 routes (7 alias pairs + 3 hash anchors + *)
-  main.tsx                # StrictMode + createRoot
+src/ (39 files)
+  App.tsx                 # HashRouter + 16 Route entries (15 content paths + * NotFound; 6 legacy alias paths in 5 groups + 4 hash anchors)
+  main.tsx                # StrictMode + createRoot + explicit #root guard
   index.css               # @theme (24 colors + 2 shadows) + base + utilities (11 incl. gold-rule/gold-rule-left)
   components/
     Layout.tsx            # Outlet + hash-aware scroll restoration (double-hash aware, 80ms) + SkipLink
-    Header.tsx            # z-50 maroon-900 sticky, useScrolled(16) (default 12), hover+click dropdown, mobile drawer
-    Footer.tsx            # 4-col + divider-weave-thin + SocialIcons + site.ts address
-    PageHero.tsx          # maroon-900 hero (compact?, bg-grain, dual gradients, divider-weave-thin)
+    Header.tsx            # z-50 fixed maroon-950 bar (translucent + blur when scrolled; transparent at top of Home), useScrolled(16) (default 12), hover+click dropdown, mobile drawer
+    Footer.tsx            # 4-col + divider-weave-thin + SocialIcons (verified shrine profiles) + site.ts address
+    PageHero.tsx          # maroon-950 hero (compact?, bg-grain, dual gradients, divider-weave-thin; image alt="" only)
     SafeImage.tsx         # Pexels→local fallback (fallback=/images/hero-shrine.jpg, lazy, onError→dataset.fallback guard) — use for any external image
     Emblem.tsx            # inline SVG emblem (crook + wheat, currentColor)
-    SkipLink.tsx          # skip-to-#main-content link (.skip-link utility)
+    SkipLink.tsx          # skip-to-#main-content link; preventDefault + imperative focus — never rewrites the hash (HashRouter)
     SocialIcons.tsx       # hand-drawn Facebook/Instagram/YouTube glyphs
-    Timeline.tsx          # alternating rail + Reveal per entry
+    Timeline.tsx          # left rail (border-l) + Reveal per entry
     ui/
       Button.tsx          # discriminated union (to/href/button) + icon, 4 variants
       Container.tsx       # max-w-7xl mx-auto px-5 sm:px-8
@@ -246,10 +246,10 @@ src/ (38 files)
     cn.ts                 # twMerge(clsx) + cn.test.ts (5 tests)
   test/
     setup.ts              # vitest setup (@testing-library/jest-dom + IntersectionObserver mock)
-  # colocated tests: utils/cn.test.ts (5), data/nav.test.ts (6), data/content.test.ts (5), data/site.test.ts (4), components/ui/Button.test.tsx (6) — 5 files / 26 tests + 1 setup
+  # colocated tests: utils/cn.test.ts (5), data/nav.test.ts (6), data/content.test.ts (5), data/site.test.ts (4), components/ui/Button.test.tsx (6), components/SkipLink.test.tsx (3) — 6 files / 29 tests + 1 setup
 e2e/ (5 files — 20 tests)
   smoke.spec.ts           # 7 tests — hero + routes + footer
-  navigation.spec.ts      # 5 tests — Header hover, keyboard, mobile drawer, SkipLink
+  navigation.spec.ts      # 5 tests — Header hover, keyboard + hash-preserving SkipLink, mobile drawer, SkipLink
   what-to-see.spec.ts     # 4 tests — 3 cards + hash anchors + WhatToSee jump nav (Link to="/what-to-see#id")
   give-faq.spec.ts        # 4 tests — givingOptions (8) + FAQ + aliases
   helpers.ts              # shared helpers
@@ -274,8 +274,10 @@ e2e/ (5 files — 20 tests)
 <Route path="hours-location" element={<Pilgrimage />} />
 <Route path="news-events" element={<NewsEvents />} />
 <Route path="news-and-events" element={<NewsEvents />} />
+<Route path="volunteer" element={<Volunteer />} />
 <Route path="give" element={<Give />} />
 <Route path="shrinegift" element={<Give />} />
+<Route path="faq" element={<FAQ />} />
 // WhatToSee anchors: /what-to-see#pilgrim-center | #shrine-church | #tepeyac-hill
 // Pilgrimage anchor: /pilgrimage#visit  ;  fallback: path="*" → <NotFound />
 ```
@@ -291,10 +293,10 @@ e2e/ (5 files — 20 tests)
 | `SectionHeading` | `src/components/ui/SectionHeading.tsx` | `eyebrow?, title, description?, align?, light?` | Eyebrow renders `gold-rule-left` line + gold/maroon; light = gold/cream on dark |
 | `PageHero` | `src/components/PageHero.tsx` | `eyebrow, title, description?, image, children?, compact?` | `compact` shrinks padding; `bg-grain` + dual gradients; `alt=""` |
 | `SafeImage` | `src/components/SafeImage.tsx` | `src, fallback?, alt, className?, loading?` (`fallback` default `/images/hero-shrine.jpg`, `loading` default `lazy`) | Wraps `<img>` with `onError→dataset.fallback` guard to swap `src` once; always via `cn()`. Use for any Pexels CDN or external image; don't use bare `<img>` for CDN sources. |
-| `Header` | `src/components/Header.tsx` | `useScrolled(16)` (default 12) + `mobileOpen`, `openDesktopMenu` | `aria-haspopup`/`aria-expanded` on dropdown trigger; close on `location.pathname` change; threshold 16 delays transparent→solid switch on Home (intentional vs default 12) |
+| `Header` | `src/components/Header.tsx` | `useScrolled(16)` (default 12) + `mobileOpen`, `openDesktopMenu` | Fixed maroon-950 bar (`maroon-950/92` + blur when scrolled; transparent at top of Home); `aria-haspopup`/`aria-expanded` on dropdown trigger; close on `location.pathname` change; threshold 16 delays transparent→solid switch on Home (intentional vs default 12) |
 | `Reveal` | `src/components/ui/Reveal.tsx` | `children, delay?, as?: "div"│"li", className?` | `IntersectionObserver` 0.15 threshold; falls back visible if unsupported; respects `prefers-reduced-motion` |
 | `Accordion` | `src/components/ui/Accordion.tsx` | `items: {question,answer}[]` | Single-open, `grid-rows` animation, `Plus rotate-45` |
-| `Emblem` / `SkipLink` / `Timeline` | `src/components/*` | see files | `Emblem` is inline SVG; `SkipLink` targets `#main-content` (`.skip-link` utility); `Timeline` alternating rail |
+| `Emblem` / `SkipLink` / `Timeline` | `src/components/*` | see files | `Emblem` is inline SVG; `SkipLink` targets `#main-content` via preventDefault + imperative focus (never rewrites the hash); `Timeline` is a left rail (border-l) with Reveal per entry |
 | `cn` | `src/utils/cn.ts` | `cn(...ClassValue[])` | Only merge path — `twMerge(clsx(...))` |
 
 ---
@@ -342,7 +344,7 @@ export function useScrolled(threshold = 12) {
 |  | `faqs: FaqItem[]` | 6 | `FAQ.tsx` |
 |  | `upcomingEvents: EventItem[]` | 4 | `NewsEvents.tsx`, `Home.tsx` |
 |  | `givingOptions: GivingOption[]` | 8 | `Give.tsx` |
-|  | `images: { hero, heroFallback, wheat, wheatFallback, atitlan, atitlanSunset, atitlanAerial, chapel, garden, hillChapel }` | 10 (6 Pexels CDN + 4 local/derived) | `Home.tsx`, `PageHero` fallbacks via `SafeImage` |
+|  | `images: { hero, heroFallback, wheat, wheatFallback, atitlan, atitlanSunset, atitlanAerial, chapel, garden, hillChapel }` | 10 (7 Pexels CDN + 3 local: heroFallback, wheatFallback, chapel) | `Home.tsx`, `PageHero` fallbacks via `SafeImage` |
 | `src/data/nav.ts` | `primaryNav: NavItem[]` | 6 (+ 6 children) | `Header.tsx` |
 |  | `footerNav: NavLink[]` | 10 | `Footer.tsx` |
 | `src/data/site.ts` | `site: { name, shortName, address, hours (5 keys), mass, contact (phone+emails), mapsUrl, mapsEmbedSrc }` | 1 canonical object | `Footer.tsx`, `Pilgrimage.tsx` (hours 5: `grounds`/`shrineChurch`/`chapelOfTomb`/`giftShop`/`museum`; `mass` + `phone`) |
@@ -373,9 +375,9 @@ export function useScrolled(threshold = 12) {
 
 | Foreground | Background | Ratio | Level |
 |---|---|---|---|
-| `shrine-ink #2c2418` | `shrine-cream #faf5eb` | ~13:1 | AAA |
+| `shrine-ink #2a2115` | `shrine-cream #faf6ec` | ~13:1 | AAA |
 | `shrine-charcoal #423a2c` | `shrine-cream` | ~10:1 | AAA |
-| `shrine-cream #faf5eb` | `shrine-maroon-900 #351012` | ~13:1 | AAA |
+| `shrine-cream #faf6ec` | `shrine-maroon-900 #33100f` | ~13:1 | AAA |
 | `shrine-gold-300 #e2bf72` | `shrine-maroon-900` | ~7:1 | AAA |
 
 Verify new pairings with a contrast checker before merging.
@@ -385,7 +387,7 @@ Verify new pairings with a contrast checker before merging.
 - **Focus ring:** `focus-visible:outline` via Tailwind defaults; preserve `focus-visible` styles on `Button` and `Header` toggle. Do not remove outlines.
 - **Header toggle:** `aria-label` toggles `Open menu`/`Close menu`, `aria-expanded` reflects `mobileOpen`. Keep both.
 - **Dropdowns:** Currently hover-open (`onMouseEnter`/`onMouseLeave` on `primaryNav` children). If converting to click-open, add `aria-haspopup="true"` + focus-trap + `Escape` close.
-- **Skip-to-content:** Not yet implemented — add `<a href="#main">` targeting `<main id="main">` in `Layout.tsx` before claiming AAA.
+- **Skip-to-content:** Implemented — `SkipLink.tsx` renders `<a href="#main-content">` first in `Layout`. Under HashRouter the component **must not** let the browser follow the href (the hash is the route): `onClick` `preventDefault`s and imperatively focuses `#main-content` (`<main tabIndex={-1}>`). Contract enforced by `SkipLink.test.tsx` + `e2e/navigation.spec.ts`.
 - **Landmarks:** `header`/`main`/`footer` present via `Layout`; every page's `PageHero` is `section` with heading hierarchy `h1 → h2`.
 
 ### 8.3 Images & Media
@@ -434,7 +436,7 @@ Each entry: symptom → root cause → fix → lesson. Severity: `Critical` (bre
 | `pnpm dev` → `EADDRINUSE :5173` | Port in use | `pnpm dev -- --port 5174` or `lsof -i:5173 | kill` |
 | `Cannot find module '@/utils/cn'` | Alias desync (see §9 #5) | Align `vite.config.ts` ↔ `tsconfig.json` `paths @/*` (`baseUrl:"."`) — change both; restart Vite |
 | `npx tsc --noEmit` → `TS6133 'x' is declared but never used` | `noUnusedLocals`/`Params` (`strict` + `noUnusedLocals:true` `noUnusedParameters:true`) | Remove import or use it; for intentionally unused param, prefix `_` (e.g., `_idx`) |
-| `vite.config.ts` `test` or `server.watch` ignored wrong | `include`/`exclude` or `ignored` pattern typo | Verify `test.include: ["src/**/*.{test,spec}.{ts,tsx}"]` + `exclude: ["e2e/**",…]` + `server.watch.ignored: ["**/skills/**","**/dist/**","**/playwright-report/**","**/test-results/**","**/coverage/**"]`; `skills` symlink contains large `.venv` → `ENOSPC` if not ignored |
+| `vite.config.ts` `test` or `server.watch` ignored wrong | `include`/`exclude` or `ignored` pattern typo | Verify `test.include: ["src/**/*.{test,spec}.{ts,tsx}"]` + `exclude: ["e2e/**",…]` + `server.watch.ignored: ["**/skills/**","**/dist/**","**/playwright-report/**","**/test-results/**","**/coverage/**"]`; the vendored `skills/` tree contains a large `.venv` → `ENOSPC` if not ignored |
 | Hash anchor lands at top (`/#what-to-see#pilgrim-center`) | Target `id` missing or `Layout` effect stale | Verify `id="pilgrim-center"` in `WhatToSee.tsx`; check `Layout` `useEffect` deps `[pathname, hash]`; `WhatToSee` jump nav uses `<Link to="/what-to-see#id">` (not plain `<a href="#id">`) to preserve HashRouter route |
 | `pnpm build` → `dist/index.html` missing or not inlined | `viteSingleFile` misordered or removed | Verify `plugins: [react(), tailwindcss(), viteSingleFile()]` order; check `dist/index.html` exists and `Inlining: index-*.js` in log; `dist/images/` alongside is expected (publicDir copy) |
 | Styles missing locally but build works | `@import "tailwindcss"` order wrong | `@import` must be first line of `src/index.css` |
@@ -460,10 +462,10 @@ Run in order — every step must be green before pushing `main` (`main` is the d
 ```bash
 pnpm lint                      # 1 — eslint 9.23 flat --max-warnings 0
 pnpm typecheck                 # 2 — tsc --noEmit (strict + noUnusedLocals/Params)
-pnpm test                      # 3 — vitest 3.2.6 jsdom — 26 tests (5 files: cn 5, nav 6, content 5, site 4, Button 6)
+pnpm test                      # 3 — vitest 3.2.6 jsdom — 29 tests (6 files: cn 5, nav 6, content 5, site 4, Button 6, SkipLink 3)
 pnpm test:e2e                  # 4 — playwright 1.55.1 chromium — 20 tests (4 specs: smoke 7, navigation 5, what-to-see 4, give-faq 4)
-pnpm build                     # 5 — singlefile 2.3.3 build → dist/index.html (~370 kB, gzip ~108 kB; + dist/images/ 4 files)
-pnpm preview &                 # 6 — smoke: spot-check 10 routes + 7 alias paths + 4 hash anchors
+pnpm build                     # 5 — singlefile 2.3.3 build → dist/index.html (~372 kB, gzip ~109 kB; + dist/images/ 4 files)
+pnpm preview &                 # 6 — smoke: spot-check 10 routes + 6 alias paths + 4 hash anchors
 ls -lh dist/                   # 7 — confirm dist/index.html + dist/images/ (publicDir copy expected — not inlined)
 # 8 — axe/Lighthouse a11y spot-check on Header + Home hero + FAQ
 git push origin main           # 9 — deploy (GH Pages / S3 upload of dist/index.html + dist/images/)
@@ -473,14 +475,14 @@ git push origin main           # 9 — deploy (GH Pages / S3 upload of dist/inde
 |---|---|---|
 | Lint | `pnpm lint` clean | `eslint 9.23.0` flat `eslint . --max-warnings 0` (`typescript-eslint 8.28.0` + `react-hooks 5.2.0`) |
 | Types | `pnpm typecheck` (`npx tsc --noEmit`) clean | `strict` + `noUnusedLocals`/`noUnusedParameters`/`noFallthroughCasesInSwitch`/`isolatedModules`/`noEmit` pass; `tsconfig.json` `include` covers `src`, `vite.config.ts`, `eslint.config.js`, `playwright.config.ts` |
-| Tests | `pnpm test` — 26 passed (5 files) | `vitest 3.2.6` `jsdom 26.1.0` + `setupFiles: ["src/test/setup.ts"]` (`@testing-library/react 16.2.0`, `@testing-library/jest-dom 6.6.3`) |
-| E2E | `pnpm test:e2e` — 20 passed (chromium, 4 specs) | `playwright 1.55.1` + `webServer` → `pnpm exec vite :5173` + `trace/video on failure`; `helpers.ts` shared |
-| Build | `pnpm build` greens | `viteSingleFile 2.3.3` inlines JS + CSS; `dist/images/` copied (not inlined) — ~370 kB (≤400 kB) |
-| Routes | All 10 pages + 7 alias paths + 4 hash anchors navigate (HashRouter) | Manual or `agent-browser` smoke (`Layout` double-hash aware `#/what-to-see#id` → split + 80ms) |
+| Tests | `pnpm test` — 29 passed (6 files) | `vitest 3.2.6` `jsdom 26.1.0` + `setupFiles: ["src/test/setup.ts"]` (`@testing-library/react 16.2.0`, `@testing-library/jest-dom 6.6.3`) |
+| E2E | `pnpm test:e2e` — 20 passed (chromium, 4 specs) | `playwright 1.55.1` + `webServer` → `pnpm exec vite --port 5173 --host 127.0.0.1 --strictPort` + `expect.timeout: 15s` + `trace/video on failure`; `helpers.ts` shared |
+| Build | `pnpm build` greens | `viteSingleFile 2.3.3` inlines JS + CSS; `dist/images/` copied (not inlined) — ~372 kB (≤400 kB) |
+| Routes | All 10 pages + 6 alias paths + 4 hash anchors navigate (HashRouter) | Manual or `agent-browser` smoke (`Layout` double-hash aware `#/what-to-see#id` → split + 80ms) |
 | A11y | Contrast ≥4.5:1 on body, `alt` on content images (`SafeImage` fallback), `aria-expanded` on toggle, `SkipLink` | Spot-check per §8 table |
 | Visual | Hero gradients + `shadow-shrine`/`shadow-shrine-lg` + `divider-weave`/`divider-weave-thin` + `gold-rule`/`gold-rule-left` render | Preview comparison |
 | Images | `SafeImage` fallback verified (Pexels→local) + `public/images/` → `dist/images/` on deploy | Block CDN or off-line smoke; check `dist/images/` has 4 files |
-| Git | No `dist/`/`node_modules/`/`skills/` committed | `.gitignore` respected |
+| Git | No `dist/`/`node_modules/` committed | `.gitignore` respected (`skills/` stays tracked as vendored reference content) |
 
 ---
 
@@ -518,11 +520,10 @@ git push origin main           # 9 — deploy (GH Pages / S3 upload of dist/inde
 
 **Data / A11y**
 - Don't omit `imageAlt` on content sections.
-- Don't remove `alt=""` + `aria-hidden` on decorative hero overlays.
-- Don't drop `aria-expanded`/`aria-label` on the mobile toggle.
+- Don't remove `alt=""` on decorative hero overlays (`PageHero`); don't drop `aria-expanded`/`aria-label` on the mobile toggle.
 
 **Build**
-- Don't commit `dist/`/`node_modules/`/`skills` symlink.
+- Don't commit `dist/`/`node_modules/`. `skills/` is already committed vendored reference content — don't import from it or lint it (eslint ignores it).
 
 ---
 
@@ -545,6 +546,7 @@ git push origin main           # 9 — deploy (GH Pages / S3 upload of dist/inde
 Location: `src/components/ui/Button.tsx`
 
 ```tsx
+// src/components/ui/Button.tsx — actual implementation (discriminated union)
 type Variant = "primary" | "secondary" | "ghost" | "outline-light";
 const variantClasses: Record<Variant, string> = {
   primary: "bg-shrine-gold-500 text-shrine-maroon-900 hover:bg-shrine-gold-300 shadow-shrine",
@@ -552,13 +554,12 @@ const variantClasses: Record<Variant, string> = {
   ghost: "bg-transparent text-shrine-maroon-600 hover:bg-shrine-maroon-50",
   "outline-light": "border border-shrine-cream/70 text-shrine-cream hover:bg-shrine-cream/10",
 };
-export function Button({ to, href, variant = "primary", children, className, ...props }: ButtonProps) {
-  const classes = cn(
-    "inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 text-sm font-semibold uppercase tracking-wide transition-colors duration-200",
-    variantClasses[variant],
-    className,
-  );
-  return to ? <Link to={to} className={classes}>{children}</Link> : <a href={href} className={classes} {...props}>{children}</a>;
+// baseClasses adds rounded-sm sizing + focus-visible ring + disabled styles.
+export function Button(props: ButtonProps) {
+  const classes = cn(baseClasses, variantClasses[props.variant ?? "primary"], props.className);
+  if ("to" in props && props.to) { /* <Link to> … */ }
+  if ("href" in props && props.href) { /* <a href> … */ }
+  return <button type="button" className={classes} {…rest} />; // native fallback
 }
 ```
 
@@ -567,18 +568,47 @@ export function Button({ to, href, variant = "primary", children, className, ...
 Location: `src/components/Layout.tsx`
 
 ```tsx
-import { Outlet, useLocation } from "react-router-dom";
+// src/components/Layout.tsx — actual implementation (double-hash aware)
 import { useEffect } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
+import { SkipLink } from "@/components/SkipLink";
+
+function resolveAnchor(pathname: string, hash: string) {
+  if (hash && hash.length > 1) return hash.slice(1);
+  // Double-hash form: #/what-to-see#pilgrim-center → take the last segment
+  const parts = window.location.hash.split("#").filter(Boolean);
+  if (parts.length < 2) return "";
+  const last = parts[parts.length - 1] ?? "";
+  const cleaned = last.replace(/^\//, "");
+  if (!cleaned || cleaned === pathname.replace(/^\//, "")) return "";
+  return cleaned;
+}
+
 export function Layout() {
   const { pathname, hash } = useLocation();
   useEffect(() => {
-    if (hash) {
-      const el = document.getElementById(hash.slice(1));
-      if (el) { setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 80); return; }
+    const id = resolveAnchor(pathname, hash);
+    if (id) {
+      const el = document.getElementById(id);
+      if (el) {
+        window.setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
+        return;
+      }
     }
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
   }, [pathname, hash]);
-  return <div className="flex min-h-screen flex-col bg-shrine-cream"><Header /><main className="flex-1"><Outlet /></main><Footer /></div>;
+  return (
+    <div className="min-h-screen bg-shrine-cream">
+      <SkipLink />
+      <Header />
+      <main id="main-content" tabIndex={-1}>
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
+  );
 }
 ```
 
@@ -648,12 +678,13 @@ Tailwind defaults only (no custom config). Project usage:
 
 | Layer | `z-*` | Element | File | Purpose |
 |---|---|---|---|---|
-| Top | `z-50` | `<header>` | `src/components/Header.tsx:28` | Sticky nav above content + hero |
+| Top | `z-[100]` | Skip-to-content link | `src/components/SkipLink.tsx` (`.skip-link` utility) | Always reachable above everything when focused |
+| High | `z-50` | `<header>` + its desktop dropdown | `src/components/Header.tsx` | Fixed nav above content + hero; dropdown inherits header stacking |
+| Mid | `z-40` | What-to-See jump nav (sticky under header) | `src/pages/WhatToSee.tsx` | Sticky section nav below the fixed header |
 | Base | `z-auto` | `main`, `footer`, `PageHero` gradients | `src/components/Layout.tsx`, `Footer.tsx`, `PageHero.tsx` | Normal flow |
-| Dropdown | *(no explicit z — flow + absolute)* | Desktop nav child `absolute left-0 top-full` | `src/components/Header.tsx` | Flow-ordered; elevate if overlapping hero |
 | Portal | — | None yet | — | Add Radix/Portal table when modals exist |
 
-**Conflict rule:** Only `Header` owns `z-50`; don't add competing `z-50` without a reason and an update to this table.
+**Conflict rule:** `Header` owns `z-50`; jump nav stays below it at `z-40`; only the skip link may exceed them (`z-[100]`). Don't add competing layers without updating this table.
 
 ---
 
@@ -887,7 +918,7 @@ This project follows **ANALYZE → PLAN → VALIDATE → IMPLEMENT → VERIFY �
 | Deep workflow + anti-generic | `CLAUDE.md` |
 | Intent lineage | `docs/prompts.md` |
 | Tokens (24 colors + 2 shadows) + utilities (11) | `src/index.css` (`--font-sans` alias `--font-body`; utilities incl. `gold-rule`/`gold-rule-left`) |
-| Route table + aliases | `src/App.tsx` (named exports; 7 alias pairs + 4 hash anchors) |
+| Route table + aliases | `src/App.tsx` (named exports; 16 Route entries = 15 content paths + `*`, 6 legacy alias paths in 5 groups, 4 hash anchors) |
 | Nav single-source | `src/data/nav.ts` (`primaryNav` 6 + `footerNav` 10, with `description`) |
 | Content arrays (5) + images + site | `src/data/content.ts` (`lifeTimeline` 8, `whatToSee` 3, `faqs` 6, `upcomingEvents` 4, `givingOptions` 8 + `images` 10) + `src/data/site.ts` (hours 5 + mass + phone) |
 | Primitives | `src/components/ui/*` (Button/Container/SectionHeading/Accordion/Reveal) + SafeImage/Emblem/SkipLink/Timeline/SocialIcons |
@@ -896,4 +927,4 @@ This project follows **ANALYZE → PLAN → VALIDATE → IMPLEMENT → VERIFY �
 | Images | `public/images/*.jpg` (4 files → `dist/images/`) + Pexels CDN for hero/whatToSee + `images` export (onError→local via `SafeImage`) |
 | Vite alias + singlefile + watch/test | `vite.config.ts` (`@→src`, `viteSingleFile()`, `test.include/exclude`, `setupFiles: ["src/test/setup.ts"]`, `server.watch.ignored`) |
 | TS strict + include | `tsconfig.json` (`strict` + `noUnused*` + `include: ["src","vite.config.ts","eslint.config.js","playwright.config.ts"]` + `types: ["node","vitest/globals"]`) |
-| Pre-ship gate | `pnpm lint && pnpm typecheck && pnpm test (26/5) && pnpm test:e2e (20/4) && pnpm build` (~370kB/108kB + dist/images/ 4 files) → `pnpm preview` |
+| Pre-ship gate | `pnpm lint && pnpm typecheck && pnpm test (29/6) && pnpm test:e2e (20/4) && pnpm build` (~372kB/109kB + dist/images/ 4 files) → `pnpm preview` |

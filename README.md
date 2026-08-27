@@ -40,8 +40,8 @@ Every row below is implemented — no placeholders.
 | Icons | lucide-react | `1.34.0` | Header/footer + page iconography |
 | Utils | clsx + tailwind-merge | `2.1.1` / `3.6.0` | `cn()` class merging |
 | Bundling | vite-plugin-singlefile | `2.3.3` | Inlines JS+CSS into `dist/index.html` (`public/images/` copied to `dist/images/`) |
-| Testing | Vitest + Testing Library + jsdom | `3.2.6` / `16.2.0` / `26.1.0` | `globals: true`, `environment: jsdom`, `setupFiles: src/test/setup.ts` (5 files / 26 tests) |
-| E2E | Playwright | `1.55.1` | `chromium`, `webServer` → `pnpm dev :5173`, `e2e/` (20 tests: smoke 7 + navigation 5 + what-to-see 4 + give-faq 4) |
+| Testing | Vitest + Testing Library + jsdom | `3.2.6` / `16.2.0` / `26.1.0` | `globals: true`, `environment: jsdom`, `setupFiles: src/test/setup.ts` (6 files / 29 tests) |
+| E2E | Playwright | `1.55.1` | `chromium`, `webServer` → `pnpm exec vite --port 5173 --host 127.0.0.1 --strictPort`, `e2e/` (20 tests: smoke 7 + navigation 5 + what-to-see 4 + give-faq 4) |
 | Linting | ESLint flat + typescript-eslint + react-hooks | `9.23.0` / `8.28.0` / `5.2.0` | `eslint . --max-warnings 0`, `eslint.config.js` |
 | Fonts | Google Fonts | — | `Fraunces` (display) + `Source Sans 3` (body) via `index.html` |
 
@@ -79,19 +79,19 @@ flowchart TB
 ├── 📂 public/
 │   └── 📂 images/           # 4 files: hero-shrine.jpg, chapel-light.jpg, oklahoma-wheat.jpg, tepeyac-hill.jpg (Vite publicDir → dist/images/ — upload alongside dist/index.html); Pexels CDN for hero/whatToSee with SafeImage local fallback
 ├── 📂 src/
-│   ├── 📄 App.tsx           # HashRouter + 15 routes (7 alias pairs + 3 hash anchors + *)
+│   ├── 📄 App.tsx           # HashRouter + 16 Route entries (15 content paths + *, 6 legacy alias paths, 4 hash anchors)
 │   ├── 📄 main.tsx          # StrictMode + createRoot
 │   ├── 📄 index.css         # @theme shrine-* tokens (24 colors + 2 shadows) + @layer base/utilities
 │   ├── 📂 components/
-│   │   ├── 📄 Layout.tsx    # Outlet + scroll/hash restoration + SkipLink
-│   │   ├── 📄 Header.tsx    # maroon-900 sticky, useScrolled(16), hover+click dropdown, mobile drawer
+│   │   ├── 📄 Layout.tsx    # Outlet + scroll/hash restoration + SkipLink (focus-moving, hash-preserving)
+│   │   ├── 📄 Header.tsx    # fixed maroon-950 bar, useScrolled(16), hover+click dropdown, mobile drawer
 │   │   ├── 📄 Footer.tsx    # 4-col + divider-weave-thin + SocialIcons + site.ts address
 │   │   ├── 📄 PageHero.tsx  # maroon hero primitive (compact? + bg-grain + gradients)
 │   │   ├── 📄 Emblem.tsx    # inline SVG emblem (crook + wheat)
 │   │   ├── 📄 SafeImage.tsx # Pexels→local fallback (fallback="/images/hero-shrine.jpg", lazy, onError guard)
 │   │   ├── 📄 SkipLink.tsx  # skip-to-main-content
 │   │   ├── 📄 SocialIcons.tsx # hand-drawn brand glyphs (lucide has no brand icons)
-│   │   ├── 📄 Timeline.tsx  # alternating rail + Reveal
+│   │   ├── 📄 Timeline.tsx  # left rail (border-l) + Reveal
 │   │   └── 📂 ui/           # Button (to/href/button + icon), Container, SectionHeading, Accordion, Reveal
 │   ├── 📂 hooks/
 │   │   └── 📄 useScrolled.ts # scrollY > threshold → scrolled boolean
@@ -104,7 +104,7 @@ flowchart TB
 │   │   └── 📄 cn.ts         # twMerge(clsx) — always merge via cn()
 │   ├── 📂 test/
 │   │   └── 📄 setup.ts      # vitest setup (`@testing-library/jest-dom` + IntersectionObserver mock)
-│   └── (adjacent tests: `src/utils/cn.test.ts`, `src/data/{nav,content,site}.test.ts`, `src/components/ui/Button.test.tsx` — 5 files / 26 tests)
+│   └── (adjacent tests: `src/utils/cn.test.ts`, `src/data/{nav,content,site}.test.ts`, `src/components/ui/Button.test.tsx`, `src/components/SkipLink.test.tsx` — 6 files / 29 tests)
 ├── 📂 e2e/
 │   ├── 📄 smoke.spec.ts     # 7 smoke (alias routes + hash anchors + mobile drawer + NotFound)
 │   ├── 📄 navigation.spec.ts# 5 desktop hover + keyboard + skip + footer + Give
@@ -113,7 +113,9 @@ flowchart TB
 │   └── 📄 helpers.ts        # gotoHash helper
 ├── 📄 .github/workflows/ci.yml # CI: lint → typecheck → test → test:e2e → build
 ├── 📂 docs/
-│   └── 📄 prompts.md        # Intent lineage
+│   ├── 📄 prompts.md        # Intent lineage
+│   ├── 📄 alignment-report.md + codebase-alignment-validation.md  # Prior doc-alignment audit
+│   └── 📄 fresh-clone-audit-2026-08-27.md  # Tiered code review + security audit (severity-ranked, evidence-backed)
 ├── 📄 CLAUDE.md             # Deep conventions (authoritative)
 └── 📄 AGENTS.md             # Compact agent cheat sheet
 ```
@@ -128,7 +130,9 @@ git clone <repo-url> rothershrine && cd rothershrine
 
 # 2 — Install (deterministic)
 pnpm install --frozen-lockfile
-# or: npm ci
+# npm is not a drop-in for these exact pins: typescript-eslint 8.28.0's peer
+# range predates TypeScript 5.9, so use `npm ci --legacy-peer-deps` if you
+# must use npm (pnpm is the supported path).
 
 # 3 — Run (HMR)
 pnpm dev
@@ -136,7 +140,7 @@ pnpm dev
 
 # 4 — Production build (single file + public assets)
 pnpm build
-# → dist/index.html  ~370 kB (gzip ~108 kB), JS+CSS inlined; dist/images/ copied from public/
+# → dist/index.html  ~372 kB (gzip ~109 kB), JS+CSS inlined; dist/images/ copied from public/
 
 # Preview prod build
 pnpm preview
@@ -148,7 +152,7 @@ pnpm preview
 ```bash
 pnpm lint               # eslint flat — expect no output (clean)
 pnpm typecheck         # tsc --noEmit — expect no output (clean)
-pnpm test               # vitest jsdom — expect 5 files / 26 passed
+pnpm test               # vitest jsdom — expect 6 files / 29 passed
 pnpm test:e2e           # Playwright chromium — expect 20 passed (smoke 7 + navigation 5 + what-to-see 4 + give-faq 4)
 pnpm build              # expect: "✓ built in ~3s" + "Inlining: index-*.js / style-*.css"
 ls -lh dist/index.html  # expect: single HTML file, no separate assets chunk
@@ -159,9 +163,9 @@ ls -lh dist/index.html  # expect: single HTML file, no separate assets chunk
 | `pnpm dev` | Vite ready on `:5173`, HMR active |
 | `pnpm lint` | Exit `0`, no warnings (`--max-warnings 0`) |
 | `pnpm typecheck` | Exit `0`, no errors |
-| `pnpm test` | `5 test files — 26 passed` |
+| `pnpm test` | `6 test files — 29 passed` |
 | `pnpm test:e2e` | `20 passed` (smoke 7 + navigation 5 + what-to-see 4 + give-faq 4, chromium) |
-| `pnpm build` | `dist/index.html` exists (~370 kB, gzip ~108 kB) + `dist/images/` |
+| `pnpm build` | `dist/index.html` exists (~372 kB, gzip ~109 kB) + `dist/images/` |
 | `pnpm preview` | Prod preview on `:4173`, all alias routes + `#hash` anchors navigate |
 
 ## Design System
@@ -197,7 +201,9 @@ Tokens live in `src/index.css` `@theme`. Extend there — never use arbitrary `b
 
 ## Deployment
 
-Primary artifact `dist/index.html` (+ `dist/images/`) — no server, no env vars, no rewrites needed.
+Primary artifact `dist/index.html` (+ `dist/images/`) — no server, no env vars, no rewrites needed. The artifact ships a scoped `Content-Security-Policy` meta (inline JS/CSS from the singlefile build, Google Fonts, Pexels imagery, Google Maps iframe) — set HSTS/X-Content-Type-Options at the CDN/host layer, which a static file cannot control.
+
+**Live deployment:** `https://rothershrine.jesspete.shop/` — verified by a browser sweep (16 routes, 4 hash anchors, mobile drawer, FAQ accordion — see `docs/fresh-clone-audit-2026-08-27.md`).
 
 ```bash
 pnpm build                # produces dist/index.html + dist/images/ (publicDir copy — singlefile inlines JS+CSS, not public/)
@@ -218,7 +224,7 @@ This repo follows the six-phase workflow in `CLAUDE.md` (ANALYZE → PLAN → VA
 - **Conventions:** `PascalCase.tsx` for components/pages, `camelCase.ts` for data/utils, `PrimaryNav` single-source, alias routes preserved, `cn()` for merges, `shrine-*` tokens only.
 - **Pre-push gate:** `pnpm lint && pnpm typecheck && pnpm test && pnpm test:e2e && pnpm build` — all five green.
 
-> `skills/` is a symlink to `~/.pi/agent/skills` and is `.gitignore`d — don't commit it. See `AGENTS.md` for the compact cheat sheet.
+> `skills/` is vendored, git-tracked reference content (agent skills index: `skills/skills-catalog.md`) — not project source; lint/build tooling ignores it. See `AGENTS.md` for the compact cheat sheet and `docs/fresh-clone-audit-2026-08-27.md` for the latest tiered code review + security audit.
 
 ## Troubleshooting
 
