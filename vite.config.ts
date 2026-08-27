@@ -17,7 +17,6 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src"),
     },
   },
-  // @ts-expect-error — vitest augments vite UserConfig via `vitest/config` types
   test: {
     globals: true,
     environment: "jsdom",

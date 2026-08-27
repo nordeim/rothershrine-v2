@@ -40,8 +40,8 @@ Every row below is implemented — no placeholders.
 | Icons | lucide-react | `1.34.0` | Header/footer + page iconography |
 | Utils | clsx + tailwind-merge | `2.1.1` / `3.6.0` | `cn()` class merging |
 | Bundling | vite-plugin-singlefile | `2.3.3` | Inlines JS+CSS into `dist/index.html` (`public/images/` copied to `dist/images/`) |
-| Testing | Vitest + Testing Library + jsdom | `3.1.4` / `16.2.0` / `26.1.0` | `globals: true`, `environment: jsdom`, `setupFiles: src/test/setup.ts` (5 files / 26 tests) |
-| E2E | Playwright | `1.54.1` | `chromium`, `webServer` → `pnpm dev :5173`, `e2e/` (20 tests: smoke 7 + navigation 5 + what-to-see 4 + give-faq 4) |
+| Testing | Vitest + Testing Library + jsdom | `3.2.6` / `16.2.0` / `26.1.0` | `globals: true`, `environment: jsdom`, `setupFiles: src/test/setup.ts` (5 files / 26 tests) |
+| E2E | Playwright | `1.55.1` | `chromium`, `webServer` → `pnpm dev :5173`, `e2e/` (20 tests: smoke 7 + navigation 5 + what-to-see 4 + give-faq 4) |
 | Linting | ESLint flat + typescript-eslint + react-hooks | `9.23.0` / `8.28.0` / `5.2.0` | `eslint . --max-warnings 0`, `eslint.config.js` |
 | Fonts | Google Fonts | — | `Fraunces` (display) + `Source Sans 3` (body) via `index.html` |
 
@@ -71,7 +71,7 @@ flowchart TB
 📂 rothershrine/
 ├── 📄 index.html            # lang, viewport, meta description, Google Fonts, #root
 ├── 📄 eslint.config.js      # flat config (typescript-eslint 8 + react-hooks 5 + react-refresh)
-├── 📄 playwright.config.ts  # Playwright 1.54 (chromium, webServer → pnpm dev :5173)
+├── 📄 playwright.config.ts  # Playwright 1.55 (chromium, webServer → pnpm dev :5173)
 ├── 📄 vite.config.ts        # plugins [react, tailwindcss, viteSingleFile] + alias @→src + test { globals, jsdom, setupFiles: src/test/setup.ts, include: src/**/*.{test,spec}.{ts,tsx}, exclude: e2e/** } + server.watch.ignored [skills/**, dist/**, playwright-report/**, test-results/**, coverage/**]
 ├── 📄 tsconfig.json         # ES2020 / ESNext / bundler / strict + noUnusedLocals/noUnusedParameters/noFallthroughCasesInSwitch/isolatedModules/noEmit + include [src, vite.config.ts, eslint.config.js, playwright.config.ts] + types [node, vitest/globals] + paths @/*
 ├── 📄 package.json          # scripts: dev / build / preview / typecheck / lint / test / test:e2e / test:watch + pnpm@11.0.0 + engines node>=20 (all deps pinned exact)

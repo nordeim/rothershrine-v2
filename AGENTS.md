@@ -4,7 +4,7 @@
 
 ## Stack
 
-`React 19.2.8` + `Vite 7.3.6` + `Tailwind CSS 4.3.3` (`@tailwindcss/vite 4.1.17`, CSS-first `@theme` inline in `src/index.css`) + `TypeScript 5.9.3` strict + `React Router 7.18.2` `HashRouter` + `vite-plugin-singlefile 2.3.3` (primary `dist/index.html` + `dist/images/` for GH Pages / S3) + `eslint 9.23.0` flat + `vitest 3.1.4` (`jsdom 26.1.0`) + `@testing-library/react 16.2.0` + `playwright 1.54.1` (chromium) · alias `@` → `src/` (sync `vite.config.ts` `path.resolve(__dirname,"src")` ↔ `tsconfig.json` `paths: {"@/*":["src/*"]}` + `baseUrl:"."`) · `pnpm 11.0.0` (`packageManager` + `engines node>=20`, `pnpm-lock.yaml` committed, `--frozen-lockfile` in CI), `npm` works · all deps pinned exact — no `^` in `package.json` (re-pin on upgrade, update docs)
+`React 19.2.8` + `Vite 7.3.6` + `Tailwind CSS 4.3.3` (`@tailwindcss/vite 4.1.17`, CSS-first `@theme` inline in `src/index.css`) + `TypeScript 5.9.3` strict + `React Router 7.18.2` `HashRouter` + `vite-plugin-singlefile 2.3.3` (primary `dist/index.html` + `dist/images/` for GH Pages / S3) + `eslint 9.23.0` flat + `vitest 3.2.6` (`jsdom 26.1.0`) + `@testing-library/react 16.2.0` + `playwright 1.55.1` (chromium) · alias `@` → `src/` (sync `vite.config.ts` `path.resolve(__dirname,"src")` ↔ `tsconfig.json` `paths: {"@/*":["src/*"]}` + `baseUrl:"."`) · `pnpm 11.0.0` (`packageManager` + `engines node>=20`, `pnpm-lock.yaml` committed, `--frozen-lockfile` in CI), `npm` works · all deps pinned exact — no `^` in `package.json` (re-pin on upgrade, update docs)
 
 ## Commands
 
@@ -44,7 +44,7 @@ src/ (38 files: 32 source + 5 tests + 1 setup)
 vite.config.ts         # alias @→src + test { globals, jsdom, setupFiles: src/test/setup.ts, include: src/**/*.{test,spec}.{ts,tsx}, exclude: e2e/** } + server.watch.ignored [skills/**, dist/**, playwright-report/**, test-results/**, coverage/**]
 tsconfig.json          # strict + noUnusedLocals/noUnusedParameters/noFallthroughCasesInSwitch/isolatedModules/noEmit + include [src, vite.config.ts, eslint.config.js, playwright.config.ts] + types [node, vitest/globals] + paths @/*
 eslint.config.js       # flat config (typescript-eslint 8 + react-hooks 5 + react-refresh)
-playwright.config.ts   # Playwright 1.54.1 (chromium, webServer → pnpm exec vite :5173)
+playwright.config.ts   # Playwright 1.55.1 (chromium, webServer → pnpm exec vite :5173)
 e2e/                   # 20 tests — smoke.spec.ts (7) + navigation.spec.ts (5) + what-to-see.spec.ts (4) + give-faq.spec.ts (4) + helpers.ts
 .github/workflows/ci.yml # CI: lint → typecheck → test → test:e2e (chromium) → build + artifacts (Node 24, pnpm 11)
 public/images/         # 4 files: hero-shrine.jpg, chapel-light.jpg, oklahoma-wheat.jpg, tepeyac-hill.jpg (Vite publicDir → dist/images/ — upload alongside dist/index.html); Pexels CDN for hero/whatToSee with SafeImage local fallback
@@ -57,7 +57,7 @@ public/images/         # 4 files: hero-shrine.jpg, chapel-light.jpg, oklahoma-wh
 - **Alias `@` must stay in sync** — `vite.config.ts` (`path.resolve(__dirname,"src")`) ↔ `tsconfig.json` (`paths: {"@/*":["src/*"]}`, `baseUrl:"."`) — change both.
 - **Tailwind v4 has no `tailwind.config.js`** — tokens live only in `src/index.css` `@theme`. Don't add arbitrary `bg-[#...]`; extend `@theme` with a named `shrine-*` token.
 - **TS strict will fail on unused code** — `noUnusedLocals:true` + `noUnusedParameters:true` + `noFallthroughCasesInSwitch:true` + `isolatedModules:true` + `noEmit:true`. Clean unused vars/params before commit.
-- **Test/lint harness: `eslint 9.23.0` flat + `vitest 3.1.4` (jsdom) + `@testing-library/react 16.2.0` + `playwright 1.54.1` (chromium)** — gate is `lint && typecheck && test && test:e2e && build` (`26 unit` via `src/test/setup.ts` + `20 E2E` via `e2e/`). CI mirrors this in `.github/workflows/ci.yml` (Node 24, pnpm 11).
+- **Test/lint harness: `eslint 9.23.0` flat + `vitest 3.2.6` (jsdom) + `@testing-library/react 16.2.0` + `playwright 1.55.1` (chromium)** — gate is `lint && typecheck && test && test:e2e && build` (`26 unit` via `src/test/setup.ts` + `20 E2E` via `e2e/`). CI mirrors this in `.github/workflows/ci.yml` (Node 24, pnpm 11).
 - **`skills` is a symlink** to `~/.pi/agent/skills` and is `.gitignore`d — don't commit it; resolve skill docs via the symlink.
 - **Google Fonts loaded in `index.html`** — `Fraunces` (display) + `Source Sans 3` (body). Don't add runtime font loaders in components.
 - **`Layout.tsx` handles hash scroll** — double-hash aware (`#/what-to-see#pilgrim-center` → split on `#` + strip `/`) + `setTimeout 80ms` + fallback `window.scrollTo`. Preserve when extending layout.
