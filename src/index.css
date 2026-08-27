@@ -93,6 +93,7 @@
 
   .bg-grain {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
   }
 
   .divider-weave {
@@ -124,21 +125,51 @@
       var(--color-shrine-gold-500) 82%,
       transparent
     );
+    transform-origin: center;
+    animation: gold-rule-draw 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
   .gold-rule-left {
     height: 1px;
     background: linear-gradient(90deg, var(--color-shrine-gold-500), transparent);
+    transform-origin: left;
+    animation: gold-rule-draw 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes gold-rule-draw {
+    from {
+      transform: scaleX(0);
+      opacity: 0;
+    }
+    to {
+      transform: scaleX(1);
+      opacity: 1;
+    }
   }
 
   .mask-fade-b {
     mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
   }
 
+  @keyframes hero-ken-burns {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.05);
+    }
+  }
+
+  .hero-ken-burns {
+    animation: hero-ken-burns 20s ease-out forwards;
+  }
+
   .reveal {
     opacity: 0;
     transform: translateY(24px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: opacity, transform;
   }
 

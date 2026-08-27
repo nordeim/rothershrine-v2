@@ -15,8 +15,41 @@ export function Accordion({ items }: AccordionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const baseId = useId();
 
+  const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement;
+    if (target.tagName !== "BUTTON") return;
+    const buttons = Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>("button"));
+    const currentIndex = buttons.indexOf(target as HTMLButtonElement);
+    if (currentIndex === -1) return;
+    let nextIndex: number | null = null;
+    switch (event.key) {
+      case "ArrowDown":
+        event.preventDefault();
+        nextIndex = (currentIndex + 1) % buttons.length;
+        break;
+      case "ArrowUp":
+        event.preventDefault();
+        nextIndex = (currentIndex - 1 + buttons.length) % buttons.length;
+        break;
+      case "Home":
+        event.preventDefault();
+        nextIndex = 0;
+        break;
+      case "End":
+        event.preventDefault();
+        nextIndex = buttons.length - 1;
+        break;
+      default:
+        return;
+    }
+    if (nextIndex !== null) buttons[nextIndex]?.focus();
+  };
+
   return (
-    <div className="divide-y divide-shrine-stone border-y border-shrine-stone">
+    <div
+      className="divide-y divide-shrine-stone border-y border-shrine-stone"
+      onKeyDown={onKeyDown}
+    >
       {items.map((item, index) => {
         const isOpen = openIndex === index;
         const panelId = `${baseId}-panel-${index}`;

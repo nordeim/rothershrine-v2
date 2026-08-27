@@ -24,7 +24,7 @@ export function Home() {
           fallback={images.heroFallback}
           alt=""
           loading="eager"
-          className="absolute inset-0 h-full w-full scale-105 object-cover"
+          className="absolute inset-0 h-full w-full object-cover hero-ken-burns"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-shrine-maroon-950/90 via-shrine-maroon-950/55 to-shrine-maroon-950/25" />
         <div className="absolute inset-0 bg-gradient-to-t from-shrine-maroon-950 via-shrine-maroon-950/20 to-shrine-maroon-950/40" />
@@ -88,18 +88,20 @@ export function Home() {
 
       <section className="border-b border-shrine-stone bg-shrine-parchment">
         <Container className="grid gap-px sm:grid-cols-2 lg:grid-cols-4">
-          {facts.map((fact) => {
+          {facts.map((fact, index) => {
             const Icon = fact.icon;
             return (
-              <div key={fact.label} className="flex gap-4 bg-shrine-parchment px-1 py-8 sm:px-4">
-                <Icon className="mt-0.5 h-5 w-5 shrink-0 text-shrine-maroon-600" aria-hidden="true" />
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-shrine-maroon-500">
-                    {fact.label}
-                  </p>
-                  <p className="mt-1 text-sm leading-snug text-shrine-ink">{fact.value}</p>
+              <Reveal key={fact.label} delay={index * 80}>
+                <div className="flex gap-4 bg-shrine-parchment px-1 py-8 sm:px-4">
+                  <Icon className="mt-0.5 h-5 w-5 shrink-0 text-shrine-maroon-600" aria-hidden="true" />
+                  <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-shrine-maroon-500">
+                      {fact.label}
+                    </p>
+                    <p className="mt-1 text-sm leading-snug text-shrine-ink">{fact.value}</p>
+                  </div>
                 </div>
-              </div>
+              </Reveal>
             );
           })}
         </Container>

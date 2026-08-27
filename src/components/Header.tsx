@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { Emblem } from "@/components/Emblem";
@@ -21,6 +21,7 @@ export function Header() {
   const [openDesktopMenu, setOpenDesktopMenu] = useState<string | null>(null);
   const [openMobileSection, setOpenMobileSection] = useState<string | null>(null);
   const menuId = useId();
+  const drawerRef = useRef<HTMLDivElement>(null);
   const isHome = pathname === "/";
   const inverted = isHome && !scrolled;
 
@@ -36,6 +37,52 @@ export function Header() {
       document.body.style.overflow = "";
     };
   }, [mobileOpen]);
+
+  // B1 — mobile drawer focus trap + Escape
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const drawer = drawerRef.current;
+    if (!drawer) return;
+    const selector = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const getFocusable = () =>
+      Array.from(drawer.querySelectorAll<HTMLElement>(selector)).filter(
+        (el) => el.offsetParent !== null || el.getAttribute("aria-hidden") !== "true",
+      );
+    // focus first element on open
+    window.setTimeout(() => getFocusable()[0]?.focus(), 0);
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setMobileOpen(false);
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusable = getFocusable();
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!first || !last) return;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    drawer.addEventListener("keydown", onKeyDown);
+    return () => drawer.removeEventListener("keydown", onKeyDown);
+  }, [mobileOpen]);
+
+  // B2 — close desktop dropdown on Escape
+  useEffect(() => {
+    if (!openDesktopMenu) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpenDesktopMenu(null);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [openDesktopMenu]);
 
   return (
     <header
@@ -77,6 +124,13 @@ export function Header() {
                 className="relative"
                 onMouseEnter={() => item.children && setOpenDesktopMenu(item.label)}
                 onMouseLeave={() => item.children && setOpenDesktopMenu(null)}
+                onFocusCapture={() => item.children && setOpenDesktopMenu(item.label)}
+                onBlurCapture={(event) => {
+                  if (!item.children) return;
+                  const next = event.relatedTarget as HTMLElement | null;
+                  if (next && event.currentTarget.contains(next)) return;
+                  setOpenDesktopMenu(null);
+                }}
               >
                 {item.children ? (
                   <button
@@ -153,7 +207,11 @@ export function Header() {
 
       {mobileOpen ? (
         <div
+          ref={drawerRef}
           id={menuId}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mobile navigation"
           className="fixed inset-x-0 top-[4.25rem] bottom-0 overflow-y-auto bg-shrine-maroon-950 px-5 pb-10 sm:top-[4.75rem] lg:hidden"
         >
           <nav aria-label="Mobile" className="mx-auto max-w-lg pt-6">
