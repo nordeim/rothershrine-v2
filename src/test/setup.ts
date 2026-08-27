@@ -17,7 +17,11 @@ if (!("IntersectionObserver" in globalThis)) {
   globalThis.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver;
 }
 
-// jsdom lacks window.scrollTo — stub to avoid Layout/PageHero errors in tests
+// jsdom lacks window.scrollTo + Element.scrollIntoView — stub to avoid
+// Layout/SkipLink errors in tests (jsdom has no layout engine)
 if (!window.scrollTo) {
   window.scrollTo = () => {};
+}
+if (!Element.prototype.scrollIntoView) {
+  Element.prototype.scrollIntoView = () => {};
 }
