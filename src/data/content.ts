@@ -77,7 +77,7 @@ export const whatToSee: WhatToSeeSection[] = [
       "Group orientation room for pilgrimage leaders and school tours",
     ],
     image:
-      "https://images.pexels.com/photos/5825353/pexels-photo-5825353.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=800&w=1200",
+      "https://images.pexels.com/photos/5825353/pexels-photo-5825353.jpeg?auto=compress&cs=tinysrgb&w=1600",
     imageAlt: "Sunlit stone hall with tall arched passages and a hanging chandelier",
   },
   {
@@ -92,8 +92,8 @@ export const whatToSee: WhatToSeeSection[] = [
       "A pipe organ under construction to lead the community in song",
     ],
     image:
-      "https://images.pexels.com/photos/28892492/pexels-photo-28892492.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=800&w=1200",
-    imageAlt: "Vibrant stained glass windows glowing inside a cathedral nave",
+      "https://images.pexels.com/photos/15634300/pexels-photo-15634300.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    imageAlt: "Warm stained glass windows glowing inside a church nave",
   },
   {
     id: "tepeyac-hill",
@@ -106,9 +106,8 @@ export const whatToSee: WhatToSeeSection[] = [
       "Space reserved for danza groups honoring Guatemalan tradition — request a performance slot",
       "Accessible paths connecting the hill to the Pilgrim Center and Shrine Church",
     ],
-    image:
-      "https://images.pexels.com/photos/28156382/pexels-photo-28156382.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=800&w=1200",
-    imageAlt: "A stone pathway winding through a lush garden at sunset",
+    image: "/images/tepeyac-hill.jpg",
+    imageAlt: "A stone pathway winding through a dusk garden toward a hilltop chapel",
   },
 ];
 
@@ -121,7 +120,7 @@ export const faqs: FaqItem[] = [
   {
     question: "Is the Shrine open to the public every day?",
     answer:
-      "Yes. The Pilgrim Center, Shrine Church, and grounds are open daily. The Chapel of the Tomb keeps slightly shorter hours to accommodate private prayer and scheduled Masses — see Plan Your Visit for the current schedule.",
+      "Yes. The Pilgrim Center, museum, gift shop, and grounds are open daily from 9 a.m. to 5 p.m. The Chapel of the Tomb keeps hours around scheduled Masses and private prayer — see Plan Your Visit for the current schedule.",
   },
   {
     question: "Is there a cost to visit?",
@@ -131,7 +130,7 @@ export const faqs: FaqItem[] = [
   {
     question: "Can I attend Mass at the Shrine?",
     answer:
-      "Daily and Sunday Masses are celebrated in the Shrine Church and are open to everyone, pilgrim or parishioner. Confessions are heard before most weekend Masses. Check the current Mass schedule before you travel, as times shift seasonally around major feasts.",
+      "Daily and Sunday Masses are celebrated in the Shrine Church and are open to everyone, pilgrim or parishioner. Confessions are heard 45 minutes before every Mass. Check the current Mass schedule before you travel, as times shift seasonally around major feasts.",
   },
   {
     question: "How long should we plan for a group pilgrimage?",
@@ -163,33 +162,33 @@ export const upcomingEvents: EventItem[] = [
     date: "July 28",
     title: "Feast Day Mass & Celebration",
     location: "Shrine Church & Tepeyac Hill",
-    category: "Feast",
     description:
-      "The Shrine's principal feast, marking the anniversary of Blessed Stanley's martyrdom, with a bilingual Mass, a Guatemalan danza procession on Tepeyac Hill, and a parish potluck on the grounds.",
+      "The Shrine's principal feast, marking the anniversary of Blessed Stanley's martyrdom. Pilgrims gather for Mass, a procession onto Tepeyac Hill, and a shared meal honoring Padre Apla's.",
+    category: "Feast",
   },
   {
     date: "First Saturday, monthly",
     title: "Pilgrim Rosary Walk",
-    location: "Tepeyac Hill Rosary Path",
-    category: "Pilgrimage",
+    location: "Tepeyac Hill",
     description:
-      "A guided, meditative walk of the rosary along Tepeyac Hill's outdoor stations, open to individuals and groups. Meet at the Pilgrim Center welcome desk fifteen minutes before the start time.",
+      "A guided rosary along the hill stations at dusk, open to families, parish groups, and first-time visitors. Lanterns are provided when the light falls.",
+    category: "Pilgrimage",
   },
   {
     date: "September – November",
-    title: "TASTE: A Guatemalan Table",
-    location: "Pilgrim Center Café",
-    category: "Community",
+    title: "TASTE Formation Series",
+    location: "Pilgrim Center",
     description:
-      "A rotating seasonal series pairing traditional Guatemalan dishes with short reflections on Padre Apla's ministry among the Tz'utujil, prepared with recipes from the Santiago Atitlán community.",
+      "An autumn series on missionary discipleship, the Guatemalan Church, and the spirituality of staying — taught by shrine staff and visiting theologians.",
+    category: "Formation",
   },
   {
-    date: "Quarterly, Thursday evenings",
-    title: "Venerable Voices Speaker Series",
-    location: "Pilgrim Center Orientation Room",
-    category: "Formation",
+    date: "Quarterly",
+    title: "Venerable Voices",
+    location: "Shrine Church",
     description:
-      "Visiting scholars, missionaries, and members of the Rother family share formation talks on martyrdom, mission, and the road to sainthood — free and open to the public, with livestream for remote parish groups.",
+      "Evenings of sacred music and testimony featuring Oklahoma choirs, Tz'utujil hymnody, and stories from families who knew Father Rother.",
+    category: "Community",
   },
 ];
 
@@ -202,42 +201,70 @@ export interface GivingOption {
 export const givingOptions: GivingOption[] = [
   {
     name: "General Fund",
-    description: "Sustains daily operations of the Pilgrim Center, Shrine Church, and grounds for every visitor.",
+    description:
+      "Unrestricted support that keeps the doors open — lights, hospitality, and the daily work of welcome.",
     icon: "flame",
   },
   {
-    name: "Pipe Organ Campaign",
-    description: "Completes the Shrine Church's pipe organ, built to lead pilgrims and parishioners in song for generations.",
+    name: "Pipe Organ",
+    description:
+      "Help complete the shrine church organ so the community can sing the Mass as it was meant to be sung.",
     icon: "church",
   },
   {
-    name: "Apla's Circle",
-    description: "A monthly giving circle named for Padre Apla's, sustaining the Shrine's mission with recurring support.",
-    icon: "hand-heart",
-  },
-  {
-    name: "Tepeyac Hill Gardens",
-    description: "Maintains the native plantings, rosary walk, and amphitheater that welcome outdoor pilgrims and feast crowds.",
+    name: "Tepeyac Hill",
+    description:
+      "Native plantings, accessible paths, and the outdoor amphitheater that hosts feast-day gatherings.",
     icon: "sprout",
   },
   {
-    name: "Guatemalan Mission Partnership",
-    description: "Supports the parish of Santiago Atitlán and the Tz'utujil communities Padre Apla's served and loved.",
-    icon: "globe",
-  },
-  {
-    name: "Pilgrim Scholarship Fund",
-    description: "Underwrites travel costs for school groups and low-income parishes making the pilgrimage to Oklahoma City.",
-    icon: "book",
-  },
-  {
-    name: "Docent & Volunteer Fund",
-    description: "Trains and equips the volunteer docents, greeters, and grounds stewards who welcome every pilgrim.",
+    name: "Apla's Circle",
+    description:
+      "A monthly giving society named for Padre Apla's — sustaining the shrine through every season.",
     icon: "heart",
   },
   {
-    name: "Legacy & Planned Giving",
-    description: "Estate gifts, charitable trusts, and memorial bequests that secure the Shrine's future for the next century.",
+    name: "Education & Formation",
+    description:
+      "School tours, catechetical materials, and the TASTE series that introduce a new generation to his witness.",
+    icon: "book",
+  },
+  {
+    name: "Hospitality Ministry",
+    description:
+      "Café hospitality, group orientation, and the quiet work of making a long journey feel like an arrival.",
+    icon: "hand-heart",
+  },
+  {
+    name: "Shrine Church",
+    description:
+      "Care for the worship space, the Chapel of the Tomb, and the art that tells his story in glass and mosaic.",
     icon: "landmark",
   },
+  {
+    name: "Guatemala Mission",
+    description:
+      "Ongoing solidarity with the parish of Santiago Atitlán, where his heart remains among the people he served.",
+    icon: "globe",
+  },
 ];
+
+export const images = {
+  hero:
+    "https://images.pexels.com/photos/16538707/pexels-photo-16538707.jpeg?auto=compress&cs=tinysrgb&w=2000",
+  heroFallback: "/images/hero-shrine.jpg",
+  wheat:
+    "https://images.pexels.com/photos/17193060/pexels-photo-17193060.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  wheatFallback: "/images/oklahoma-wheat.jpg",
+  atitlan:
+    "https://images.pexels.com/photos/38135623/pexels-photo-38135623.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  atitlanSunset:
+    "https://images.pexels.com/photos/38171640/pexels-photo-38171640.jpeg?auto=compress&cs=tinysrgb&w=1800",
+  atitlanAerial:
+    "https://images.pexels.com/photos/33235131/pexels-photo-33235131.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  chapel: "/images/chapel-light.jpg",
+  garden:
+    "https://images.pexels.com/photos/28156382/pexels-photo-28156382.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  hillChapel:
+    "https://images.pexels.com/photos/33277416/pexels-photo-33277416.jpeg?auto=compress&cs=tinysrgb&w=1600",
+} as const;

@@ -1,54 +1,45 @@
 import { PageHero } from "@/components/PageHero";
 import { Container } from "@/components/ui/Container";
-import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
-import { upcomingEvents, type EventItem } from "@/data/content";
-import { CalendarDays, MapPin } from "lucide-react";
-import { cn } from "@/utils/cn";
-
-const categoryStyles: Record<EventItem["category"], string> = {
-  Feast: "bg-shrine-gold-500 text-shrine-maroon-900",
-  Pilgrimage: "bg-shrine-pine-600 text-shrine-cream",
-  Formation: "bg-shrine-maroon-600 text-shrine-cream",
-  Community: "bg-shrine-terracotta-500 text-shrine-cream",
-};
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { images, upcomingEvents } from "@/data/content";
 
 export function NewsEvents() {
   return (
     <div>
       <PageHero
-        eyebrow="Stay Close"
+        eyebrow="The Calendar"
         title="News & Events"
-        description="Feast day celebrations, monthly rosary walks, and formation series for pilgrims near and far."
-        image="https://images.pexels.com/photos/35687682/pexels-photo-35687682.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1000&w=1800"
+        description="Feast days, rosary walks, formation, and evenings of music at the shrine."
+        image={images.hillChapel}
         compact
       />
 
       <section className="py-24 sm:py-28">
         <Container>
           <Reveal>
-            <SectionHeading eyebrow="Calendar" title="Upcoming at the Shrine" />
+            <SectionHeading
+              eyebrow="Upcoming"
+              title="Gatherings on the grounds"
+              description="Times can shift around major feasts — confirm with the pilgrimage office before you travel."
+            />
           </Reveal>
-          <div className="mt-14 grid gap-8 md:grid-cols-2">
+          <div className="mt-12 divide-y divide-shrine-stone border-y border-shrine-stone">
             {upcomingEvents.map((event, index) => (
-              <Reveal key={event.title} delay={index * 100}>
-                <article className="flex h-full flex-col overflow-hidden rounded-sm border border-shrine-stone bg-shrine-cream shadow-shrine transition-transform duration-300 hover:-translate-y-1">
-                  <div className="flex items-center justify-between gap-4 border-b border-shrine-stone bg-shrine-parchment px-6 py-4">
-                    <span className="flex items-center gap-2 text-sm font-semibold text-shrine-charcoal">
-                      <CalendarDays className="h-4 w-4 text-shrine-maroon-500" aria-hidden="true" />
-                      {event.date}
-                    </span>
-                    <span className={cn("rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wide", categoryStyles[event.category])}>
+              <Reveal key={event.title} delay={index * 60}>
+                <article className="grid gap-6 py-10 lg:grid-cols-[12rem_1fr]">
+                  <div>
+                    <p className="font-display text-xl text-shrine-maroon-600">{event.date}</p>
+                    <p className="mt-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-shrine-terracotta-500">
                       {event.category}
-                    </span>
-                  </div>
-                  <div className="flex flex-1 flex-col p-6">
-                    <h3 className="font-display text-xl font-semibold text-shrine-maroon-700">{event.title}</h3>
-                    <p className="mt-2 flex items-center gap-2 text-sm text-shrine-charcoal/70">
-                      <MapPin className="h-3.5 w-3.5 text-shrine-maroon-500" aria-hidden="true" />
-                      {event.location}
                     </p>
-                    <p className="mt-4 flex-1 text-sm leading-relaxed text-shrine-charcoal/85">{event.description}</p>
+                  </div>
+                  <div>
+                    <h2 className="font-display text-3xl text-shrine-maroon-700">{event.title}</h2>
+                    <p className="mt-2 text-sm text-shrine-charcoal/70">{event.location}</p>
+                    <p className="mt-4 max-w-2xl text-base leading-relaxed text-shrine-charcoal/85">
+                      {event.description}
+                    </p>
                   </div>
                 </article>
               </Reveal>

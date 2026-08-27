@@ -21,35 +21,21 @@ export default function App() {
     <HashRouter>
       <Routes>
         <Route element={<Layout />}>
-          <Route index element={<Home />} />
-
-          {/* About — canonical + legacy alias */}
-          <Route path="about-blessed-stanley-rother" element={<AboutRother />} />
-          <Route path="about" element={<AboutRother />} />
-
-          <Route path="history" element={<History />} />
-
-          {/* What to See — canonical + legacy alias */}
-          <Route path="what-to-see" element={<WhatToSee />} />
-          <Route path="grounds-art-architecture" element={<WhatToSee />} />
-
-          {/* Pilgrimage — canonical + legacy aliases */}
-          <Route path="pilgrimage" element={<Pilgrimage />} />
-          <Route path="visit-planning" element={<Pilgrimage />} />
-          <Route path="hours-location" element={<Pilgrimage />} />
-
-          {/* News & Events — canonical + legacy alias */}
-          <Route path="news-events" element={<NewsEvents />} />
-          <Route path="news-and-events" element={<NewsEvents />} />
-
-          <Route path="volunteer" element={<Volunteer />} />
-
-          {/* Give — canonical + legacy alias */}
-          <Route path="give" element={<Give />} />
-          <Route path="shrinegift" element={<Give />} />
-
-          <Route path="faq" element={<FAQ />} />
-
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<AboutRother />} />
+          <Route path="/about-blessed-stanley-rother" element={<AboutRother />} />
+          <Route path="/history" element={<History />} />
+          <Route path="/what-to-see" element={<WhatToSee />} />
+          <Route path="/grounds-art-architecture" element={<WhatToSee />} />
+          <Route path="/pilgrimage" element={<Pilgrimage />} />
+          <Route path="/visit-planning" element={<Pilgrimage />} />
+          <Route path="/hours-location" element={<Pilgrimage />} />
+          <Route path="/news-events" element={<NewsEvents />} />
+          <Route path="/news-and-events" element={<NewsEvents />} />
+          <Route path="/volunteer" element={<Volunteer />} />
+          <Route path="/give" element={<Give />} />
+          <Route path="/shrinegift" element={<Give />} />
+          <Route path="/faq" element={<FAQ />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

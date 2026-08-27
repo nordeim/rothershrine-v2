@@ -1,37 +1,27 @@
+import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
-import { Container } from "@/components/ui/Container";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
+import { Container } from "@/components/ui/Container";
+import { Reveal } from "@/components/ui/Reveal";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { images } from "@/data/content";
 import { site } from "@/data/site";
-import { Clock3, MapPin, Users, Navigation } from "lucide-react";
-
-const hours = [
-  { label: "Pilgrim Center & Grounds", value: "Daily, 9 a.m. – 5 p.m." },
-  { label: "Shrine Church", value: "Daily, 7 a.m. – 7 p.m." },
-  { label: "Chapel of the Tomb", value: "Daily, 8 a.m. – 6 p.m." },
-  { label: "Gift Shop & Café", value: "Daily, 9 a.m. – 4:30 p.m." },
-];
-
-const massSchedule = [
-  { label: "Sunday", value: "8:00 a.m. · 10:30 a.m. · 5:00 p.m. (Spanish)" },
-  { label: "Saturday Vigil", value: "5:00 p.m." },
-  { label: "Monday – Friday", value: "12:10 p.m." },
-  { label: "Holy Days", value: "See parish bulletin — times shift seasonally" },
-];
 
 const groupSteps = [
   {
-    title: "Reserve a date",
-    description: "Contact the pilgrimage office at least three weeks ahead for groups of 15 or more.",
+    title: "Write the pilgrimage office",
+    description:
+      "Share your parish or school name, preferred dates, group size, and whether you hope to attend Mass or add a meal.",
   },
   {
-    title: "Choose your experience",
-    description: "Add a guided tour, Mass, a Guatemalan cultural presentation, or a boxed lunch in the café.",
+    title: "Shape the itinerary",
+    description:
+      "Most groups spend two to three hours. Add Mass, the museum film, Tepeyac Hill, or a Guatemalan cultural presentation for a half-day visit.",
   },
   {
-    title: "Arrive and check in",
-    description: "Group leaders check in at the Pilgrim Center welcome desk for orientation and parking guidance.",
+    title: "Arrive and begin",
+    description:
+      "Orientation starts in the Pilgrim Center. Accessible parking is beside the main entrance; coaches have a dedicated drop-off.",
   },
 ];
 
@@ -41,60 +31,85 @@ export function Pilgrimage() {
       <PageHero
         eyebrow="Plan Your Visit"
         title="Pilgrimage"
-        description="Hours, Mass times, and everything a parish group, school tour, or individual pilgrim needs before arriving."
-        image="https://images.pexels.com/photos/7621196/pexels-photo-7621196.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1000&w=1800"
-        compact
+        description="Hours, Mass times, and how to bring a parish, school, or family to the shrine."
+        image={images.hero}
       />
 
       <section id="visit" className="scroll-mt-28 py-24 sm:py-28">
-        <Container className="grid gap-12 lg:grid-cols-[1fr_0.9fr]">
-          <div className="space-y-12">
-            <Reveal>
-              <SectionHeading eyebrow="Hours & Location" title="When to come, and how to find us" />
-              <div className="mt-8 divide-y divide-shrine-stone rounded-sm border border-shrine-stone bg-shrine-cream">
-                {hours.map((row) => (
-                  <div key={row.label} className="flex items-center justify-between gap-4 px-6 py-4">
-                    <span className="text-sm font-semibold text-shrine-charcoal">{row.label}</span>
-                    <span className="text-sm text-shrine-charcoal/75">{row.value}</span>
-                  </div>
-                ))}
-              </div>
-            </Reveal>
-
-            <Reveal delay={100}>
-              <SectionHeading eyebrow="Mass Schedule" title="Join us for Mass" />
-              <div className="mt-8 divide-y divide-shrine-stone rounded-sm border border-shrine-stone bg-shrine-cream">
-                {massSchedule.map((row) => (
-                  <div key={row.label} className="flex items-center justify-between gap-4 px-6 py-4">
-                    <span className="text-sm font-semibold text-shrine-charcoal">{row.label}</span>
-                    <span className="text-right text-sm text-shrine-charcoal/75">{row.value}</span>
-                  </div>
-                ))}
-              </div>
-            </Reveal>
-          </div>
-
-          <Reveal delay={150}>
-            <div className="rounded-sm border border-shrine-stone bg-shrine-maroon-900 p-8 text-shrine-cream shadow-shrine">
-              <MapPin className="h-8 w-8 text-shrine-gold-300" aria-hidden="true" />
-              <h3 className="mt-4 font-display text-2xl font-semibold">Find Us</h3>
-              <p className="mt-3 text-shrine-cream/80">
-                {site.address.street}
-                <br />
-                {site.address.city}, {site.address.state} {site.address.zip}
+        <Container className="grid gap-16 lg:grid-cols-[1.05fr_0.95fr]">
+          <Reveal>
+            <SectionHeading
+              eyebrow="Find Us"
+              title="A day's pilgrimage in south Oklahoma City"
+              description="The shrine, museum, gift shop, and Pilgrim Center keep the same public hours. Mass and confession follow their own rhythm."
+            />
+            <address className="mt-10 space-y-5 not-italic">
+              <p className="flex gap-3 text-shrine-charcoal/85">
+                <MapPin className="mt-1 h-5 w-5 text-shrine-maroon-600" aria-hidden="true" />
+                <span>
+                  <span className="block font-semibold text-shrine-ink">{site.address.full}</span>
+                  <a
+                    href={site.mapsUrl}
+                    className="mt-1 inline-block text-sm text-shrine-maroon-600 underline-offset-2 hover:underline"
+                  >
+                    Open in Google Maps
+                  </a>
+                </span>
               </p>
-              <div className="mt-6 flex items-center gap-3 text-sm text-shrine-cream/70">
-                <Clock3 className="h-4 w-4 text-shrine-gold-300" aria-hidden="true" />
-                Free onsite parking, including accessible spaces near the main entrance.
-              </div>
-              <Button
-                href={site.mapsUrl}
-                variant="outline-light"
-                className="mt-7 w-full"
-                icon={<Navigation className="h-4 w-4" aria-hidden="true" />}
-              >
-                Get Directions
-              </Button>
+              <p className="flex gap-3 text-shrine-charcoal/85">
+                <Phone className="mt-1 h-5 w-5 text-shrine-maroon-600" aria-hidden="true" />
+                <a href={`tel:${site.contact.phone.replace(/\D/g, "")}`}>{site.contact.phone}</a>
+              </p>
+              <p className="flex gap-3 text-shrine-charcoal/85">
+                <Mail className="mt-1 h-5 w-5 text-shrine-maroon-600" aria-hidden="true" />
+                <a href={`mailto:${site.contact.pilgrimageEmail}`}>{site.contact.pilgrimageEmail}</a>
+              </p>
+              <p className="flex gap-3 text-shrine-charcoal/85">
+                <Clock className="mt-1 h-5 w-5 text-shrine-maroon-600" aria-hidden="true" />
+                Grounds, museum & gift shop — {site.hours.grounds}
+              </p>
+            </address>
+          </Reveal>
+
+          <Reveal delay={80}>
+            <div className="border border-shrine-stone bg-shrine-parchment p-7 sm:p-9">
+              <h3 className="font-display text-2xl text-shrine-maroon-700">Mass & confession</h3>
+              <dl className="mt-6 space-y-5 text-sm">
+                <div>
+                  <dt className="text-xs font-semibold uppercase tracking-[0.2em] text-shrine-maroon-500">
+                    Saturday
+                  </dt>
+                  <dd className="mt-1 text-shrine-ink">{site.mass.saturday}</dd>
+                </div>
+                <div>
+                  <dt className="text-xs font-semibold uppercase tracking-[0.2em] text-shrine-maroon-500">
+                    Sunday
+                  </dt>
+                  <dd className="mt-1 space-y-1 text-shrine-ink">
+                    {site.mass.sunday.map((time) => (
+                      <p key={time}>{time}</p>
+                    ))}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-xs font-semibold uppercase tracking-[0.2em] text-shrine-maroon-500">
+                    Daily
+                  </dt>
+                  <dd className="mt-1 text-shrine-ink">{site.mass.daily}</dd>
+                </div>
+                <div>
+                  <dt className="text-xs font-semibold uppercase tracking-[0.2em] text-shrine-maroon-500">
+                    Confession
+                  </dt>
+                  <dd className="mt-1 text-shrine-ink">{site.mass.confession}</dd>
+                </div>
+                <div>
+                  <dt className="text-xs font-semibold uppercase tracking-[0.2em] text-shrine-maroon-500">
+                    Adoration
+                  </dt>
+                  <dd className="mt-1 text-shrine-ink">{site.mass.adoration}</dd>
+                </div>
+              </dl>
             </div>
           </Reveal>
         </Container>
@@ -104,29 +119,41 @@ export function Pilgrimage() {
         <Container>
           <Reveal>
             <SectionHeading
-              eyebrow="Group Visits"
-              title="Bringing a parish or school group?"
-              description="Most groups spend two to three hours; add Mass or a cultural presentation for a half-day pilgrimage."
+              eyebrow="Groups"
+              title="Bring a parish, school, or family"
+              description="Write us before you travel. We will help you build a visit that fits the time you have."
               align="center"
             />
           </Reveal>
-          <div className="mx-auto mt-14 grid max-w-4xl gap-8 sm:grid-cols-3">
+          <div className="mt-14 grid gap-8 md:grid-cols-3">
             {groupSteps.map((step, index) => (
-              <Reveal key={step.title} delay={index * 120}>
-                <div className="rounded-sm border border-shrine-stone bg-shrine-cream p-7 text-center">
-                  <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-shrine-maroon-600 font-display text-sm font-semibold text-shrine-gold-300">
-                    {index + 1}
-                  </span>
-                  <h3 className="mt-4 font-display text-lg font-semibold text-shrine-maroon-700">{step.title}</h3>
-                  <p className="mt-2.5 text-sm leading-relaxed text-shrine-charcoal/80">{step.description}</p>
-                </div>
+              <Reveal key={step.title} delay={index * 80}>
+                <p className="font-display text-5xl text-shrine-gold-500">0{index + 1}</p>
+                <h3 className="mt-4 font-display text-2xl text-shrine-maroon-700">{step.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-shrine-charcoal/80">{step.description}</p>
               </Reveal>
             ))}
           </div>
-          <Reveal delay={200} className="mt-12 flex justify-center">
-            <div className="flex items-center gap-3 rounded-sm bg-shrine-cream px-6 py-4 text-sm text-shrine-charcoal shadow-shrine">
-              <Users className="h-5 w-5 text-shrine-maroon-500" aria-hidden="true" />
-              Groups of 15+: email <a href={`mailto:${site.contact.pilgrimageEmail}`} className="font-semibold text-shrine-maroon-600 underline underline-offset-2">{site.contact.pilgrimageEmail}</a>
+          <div className="mt-12 text-center">
+            <Button href={`mailto:${site.contact.pilgrimageEmail}`} variant="secondary">
+              Email the pilgrimage office
+            </Button>
+          </div>
+        </Container>
+      </section>
+
+      <section className="py-24 sm:py-28">
+        <Container>
+          <Reveal>
+            <SectionHeading eyebrow="The Road" title="Find Us" />
+            <div className="mt-10 overflow-hidden border border-shrine-stone shadow-shrine">
+              <iframe
+                title="Map to Blessed Stanley Rother Shrine"
+                src={site.mapsEmbedSrc}
+                className="h-80 w-full grayscale-[20%]"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
             </div>
           </Reveal>
         </Container>

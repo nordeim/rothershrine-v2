@@ -1,26 +1,25 @@
-import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { Emblem } from "@/components/Emblem";
-import { ArrowRight } from "lucide-react";
+import { Container } from "@/components/ui/Container";
 
 export function NotFound() {
   return (
-    <section className="flex min-h-[70vh] items-center bg-shrine-cream py-24">
-      <Container className="text-center">
-        <Emblem className="mx-auto h-14 w-14 text-shrine-maroon-500" />
-        <p className="mt-6 text-xs font-semibold uppercase tracking-[0.35em] text-shrine-maroon-500">Page Not Found</p>
-        <h1 className="mt-4 text-balance font-display text-4xl font-semibold text-shrine-maroon-700 sm:text-5xl">
-          This path doesn't lead to the Shrine.
-        </h1>
-        <p className="mx-auto mt-5 max-w-md text-shrine-charcoal/80">
-          The page you're looking for may have moved. Let's get you back on the pilgrimage.
+    <section className="flex min-h-[80vh] items-center bg-shrine-maroon-950 text-shrine-cream">
+      <Container className="py-32 text-center">
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-shrine-gold-300">
+          404
         </p>
-        <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
-          <Button to="/" variant="primary" icon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}>
-            Return Home
+        <h1 className="mt-5 font-display text-4xl font-semibold text-shrine-cream sm:text-5xl">
+          This path does not lead to the shrine.
+        </h1>
+        <p className="mx-auto mt-5 max-w-md text-shrine-cream/75">
+          The page you asked for is not here. Begin again at the doors, or plan a visit.
+        </p>
+        <div className="mt-10 flex flex-wrap justify-center gap-4">
+          <Button to="/" variant="primary">
+            Return home
           </Button>
-          <Button to="/pilgrimage" variant="ghost">
-            Plan a Visit
+          <Button to="/pilgrimage" variant="outline-light">
+            Plan a visit
           </Button>
         </div>
       </Container>

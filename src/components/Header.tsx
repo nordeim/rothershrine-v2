@@ -1,160 +1,223 @@
-import { useEffect, useState } from "react";
-import { Link, NavLink as RouterNavLink, useLocation } from "react-router-dom";
+import { useEffect, useId, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, Menu, X } from "lucide-react";
-import { Container } from "@/components/ui/Container";
-import { Button } from "@/components/ui/Button";
 import { Emblem } from "@/components/Emblem";
+import { Button } from "@/components/ui/Button";
+import { Container } from "@/components/ui/Container";
 import { primaryNav } from "@/data/nav";
 import { useScrolled } from "@/hooks/useScrolled";
 import { cn } from "@/utils/cn";
 
+function pathMatches(pathname: string, to: string) {
+  const route = to.split("#")[0] ?? to;
+  if (route === "/") return pathname === "/";
+  return pathname === route || pathname.startsWith(`${route}/`);
+}
+
 export function Header() {
-  const scrolled = useScrolled();
-  const location = useLocation();
+  const { pathname } = useLocation();
+  const scrolled = useScrolled(16);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDesktopMenu, setOpenDesktopMenu] = useState<string | null>(null);
+  const [openMobileSection, setOpenMobileSection] = useState<string | null>(null);
+  const menuId = useId();
+  const isHome = pathname === "/";
+  const inverted = isHome && !scrolled;
 
   useEffect(() => {
     setMobileOpen(false);
     setOpenDesktopMenu(null);
-  }, [location.pathname]);
+    setOpenMobileSection(null);
+  }, [pathname]);
+
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
 
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full transition-all duration-300",
-        scrolled
-          ? "bg-shrine-maroon-900/95 shadow-shrine backdrop-blur"
-          : "bg-shrine-maroon-900",
+        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        scrolled || !isHome
+          ? "bg-shrine-maroon-950/92 shadow-shrine backdrop-blur-md"
+          : "bg-transparent",
       )}
     >
-      <div className="hidden border-b border-shrine-cream/10 bg-shrine-maroon-950/60 lg:block">
-        <Container className="flex items-center justify-end gap-6 py-1.5 text-xs font-medium uppercase tracking-wide text-shrine-cream/70">
-          <Link to="/pilgrimage" className="transition-colors hover:text-shrine-gold-300">
-            Hours &amp; Location
-          </Link>
-          <Link to="/faq" className="transition-colors hover:text-shrine-gold-300">
-            FAQ
-          </Link>
-          <Link to="/give" className="transition-colors hover:text-shrine-gold-300">
-            Give
+      <div className="hidden border-b border-shrine-gold-500/20 bg-shrine-maroon-950/80 lg:block">
+        <Container className="flex items-center justify-between py-1.5 text-[11px] uppercase tracking-[0.22em] text-shrine-cream/70">
+          <p>National Shrine · Oklahoma City · Feast Day July 28</p>
+          <Link to="/give" className="text-shrine-gold-300 transition-colors hover:text-shrine-gold-300/80">
+            Support the Shrine
           </Link>
         </Container>
       </div>
 
-      <Container className="flex h-20 items-center justify-between gap-4">
-        <Link to="/" className="flex items-center gap-3 text-shrine-cream" aria-label="Blessed Stanley Rother Shrine — home">
+      <Container className="flex h-[4.25rem] items-center justify-between gap-4 sm:h-[4.75rem]">
+        <Link to="/" className="flex items-center gap-3 text-shrine-cream">
           <Emblem className="text-shrine-gold-300" />
-          <span className="flex flex-col leading-none">
-            <span className="font-display text-lg font-semibold tracking-wide">Rother Shrine</span>
-            <span className="mt-1 text-[10px] font-semibold uppercase tracking-[0.3em] text-shrine-cream/60">
-              Oklahoma City
+          <span className="leading-tight">
+            <span className="block font-display text-base font-semibold sm:text-lg">
+              Blessed Stanley Rother
+            </span>
+            <span className="block text-[10px] font-semibold uppercase tracking-[0.28em] text-shrine-gold-300">
+              National Shrine
             </span>
           </span>
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
-          {primaryNav.map((item) => (
-            <div
-              key={item.label}
-              className="relative"
-              onMouseEnter={() => item.children && setOpenDesktopMenu(item.label)}
-              onMouseLeave={() => item.children && setOpenDesktopMenu(null)}
-            >
-              {item.children ? (
-                <button
-                  type="button"
-                  className="flex items-center gap-1 rounded-sm px-4 py-2 text-sm font-semibold uppercase tracking-wide text-shrine-cream/85 transition-colors hover:text-shrine-gold-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-shrine-gold-500"
-                  aria-haspopup="true"
-                  aria-expanded={openDesktopMenu === item.label}
-                  onClick={() => setOpenDesktopMenu((cur) => (cur === item.label ? null : item.label))}
-                >
-                  {item.label}
-                  <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
-                </button>
-              ) : (
-                <RouterNavLink
-                  to={item.to}
-                  className={({ isActive }) =>
-                    cn(
-                      "block rounded-sm px-4 py-2 text-sm font-semibold uppercase tracking-wide text-shrine-cream/85 transition-colors hover:text-shrine-gold-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-shrine-gold-500",
+          {primaryNav.map((item) => {
+            const isActive = pathMatches(pathname, item.to);
+            return (
+              <div
+                key={item.label}
+                className="relative"
+                onMouseEnter={() => item.children && setOpenDesktopMenu(item.label)}
+                onMouseLeave={() => item.children && setOpenDesktopMenu(null)}
+              >
+                {item.children ? (
+                  <button
+                    type="button"
+                    aria-haspopup="true"
+                    aria-expanded={openDesktopMenu === item.label}
+                    className={cn(
+                      "inline-flex items-center gap-1 rounded-sm px-3 py-2 text-[13px] font-semibold uppercase tracking-wide text-shrine-cream/85 transition-colors hover:text-shrine-gold-300",
                       isActive && "text-shrine-gold-300",
-                    )
-                  }
-                >
-                  {item.label}
-                </RouterNavLink>
-              )}
+                    )}
+                    onClick={() =>
+                      setOpenDesktopMenu((current) => (current === item.label ? null : item.label))
+                    }
+                  >
+                    {item.label}
+                    <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
+                  </button>
+                ) : (
+                  <Link
+                    to={item.to}
+                    className={cn(
+                      "block rounded-sm px-3 py-2 text-[13px] font-semibold uppercase tracking-wide text-shrine-cream/85 transition-colors hover:text-shrine-gold-300",
+                      isActive && "text-shrine-gold-300",
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                )}
 
-              {item.children && openDesktopMenu === item.label ? (
-                <div className="absolute left-1/2 top-full w-80 -translate-x-1/2 pt-3">
-                  <div className="overflow-hidden rounded-sm border border-shrine-gold-300/20 bg-shrine-maroon-950 shadow-shrine-lg">
-                    <ul>
+                {item.children && openDesktopMenu === item.label ? (
+                  <div className="absolute left-0 top-full z-50 min-w-[18rem] pt-2">
+                    <ul className="rounded-sm border border-shrine-gold-500/20 bg-shrine-maroon-950 py-2 shadow-shrine-lg">
                       {item.children.map((child) => (
                         <li key={child.to}>
                           <Link
                             to={child.to}
-                            className="block px-5 py-3.5 transition-colors hover:bg-shrine-maroon-800"
+                            className="block px-4 py-2.5 transition-colors hover:bg-shrine-cream/5"
                           >
-                            <span className="block text-sm font-semibold text-shrine-cream">{child.label}</span>
+                            <span className="block text-sm font-semibold text-shrine-cream">
+                              {child.label}
+                            </span>
                             {child.description ? (
-                              <span className="mt-0.5 block text-xs text-shrine-cream/60">{child.description}</span>
+                              <span className="mt-0.5 block text-xs text-shrine-cream/60">
+                                {child.description}
+                              </span>
                             ) : null}
                           </Link>
                         </li>
                       ))}
                     </ul>
                   </div>
-                </div>
-              ) : null}
-            </div>
-          ))}
+                ) : null}
+              </div>
+            );
+          })}
         </nav>
 
-        <div className="hidden lg:block">
-          <Button to="/give" variant="primary">
+        <div className="flex items-center gap-3">
+          <Button to="/give" variant="primary" className="hidden px-5 py-2.5 text-xs sm:inline-flex">
             Give
           </Button>
+          <button
+            type="button"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-sm text-shrine-cream lg:hidden"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            aria-controls={menuId}
+            onClick={() => setMobileOpen((open) => !open)}
+          >
+            {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </div>
-
-        <button
-          type="button"
-          className="rounded-sm p-2 text-shrine-cream lg:hidden"
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          aria-expanded={mobileOpen}
-          onClick={() => setMobileOpen((v) => !v)}
-        >
-          {mobileOpen ? <X className="h-6 w-6" aria-hidden="true" /> : <Menu className="h-6 w-6" aria-hidden="true" />}
-        </button>
       </Container>
 
       {mobileOpen ? (
-        <div className="border-t border-shrine-cream/10 bg-shrine-maroon-950 lg:hidden">
-          <Container className="flex flex-col gap-1 py-4">
-            {primaryNav.map((item) => (
-              <div key={item.label} className="border-b border-shrine-cream/10 py-2 last:border-none">
-                <Link to={item.to} className="block py-2 text-base font-semibold text-shrine-cream">
-                  {item.label}
-                </Link>
-                {item.children ? (
-                  <ul className="ml-3 flex flex-col gap-1 border-l border-shrine-cream/15 pl-4">
-                    {item.children.map((child) => (
-                      <li key={child.to}>
-                        <Link to={child.to} className="block py-1.5 text-sm text-shrine-cream/75">
-                          {child.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
-              </div>
-            ))}
-            <Button to="/give" variant="primary" className="mt-3 w-full">
-              Give
-            </Button>
-          </Container>
+        <div
+          id={menuId}
+          className="fixed inset-x-0 top-[4.25rem] bottom-0 overflow-y-auto bg-shrine-maroon-950 px-5 pb-10 sm:top-[4.75rem] lg:hidden"
+        >
+          <nav aria-label="Mobile" className="mx-auto max-w-lg pt-6">
+            <ul className="space-y-1">
+              {primaryNav.map((item) => (
+                <li key={item.label} className="border-b border-shrine-cream/10">
+                  {item.children ? (
+                    <div>
+                      <button
+                        type="button"
+                        aria-expanded={openMobileSection === item.label}
+                        className="flex w-full items-center justify-between py-4 text-left font-display text-2xl text-shrine-cream"
+                        onClick={() =>
+                          setOpenMobileSection((current) =>
+                            current === item.label ? null : item.label,
+                          )
+                        }
+                      >
+                        {item.label}
+                        <ChevronDown
+                          className={cn(
+                            "h-5 w-5 text-shrine-gold-300 transition-transform",
+                            openMobileSection === item.label && "rotate-180",
+                          )}
+                        />
+                      </button>
+                      {openMobileSection === item.label ? (
+                        <ul className="space-y-1 pb-4">
+                          {item.children.map((child) => (
+                            <li key={child.to}>
+                              <Link
+                                to={child.to}
+                                className="block py-2 text-shrine-cream/80"
+                                onClick={() => setMobileOpen(false)}
+                              >
+                                {child.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <Link
+                      to={item.to}
+                      className="block py-4 font-display text-2xl text-shrine-cream"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  )}
+                </li>
+              ))}
+              <li className="pt-6">
+                <Button to="/give" variant="primary" className="w-full">
+                  Give
+                </Button>
+              </li>
+            </ul>
+          </nav>
         </div>
       ) : null}
+
+      <span className="sr-only">{inverted ? "Transparent header" : "Solid header"}</span>
     </header>
   );
 }

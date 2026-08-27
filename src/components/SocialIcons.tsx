@@ -1,33 +1,31 @@
-import type { SVGProps } from "react";
+import { cn } from "@/utils/cn";
 
-/**
- * lucide-react 1.x dropped brand/logo icons, so these small monochrome
- * glyphs are hand-drawn to match the existing icon sizing (h-4 w-4).
- */
+interface IconProps {
+  className?: string;
+}
 
-export function FacebookIcon(props: SVGProps<SVGSVGElement>) {
+export function FacebookIcon({ className }: IconProps) {
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
-      <path d="M13.5 21v-8.2h2.75l.41-3.2H13.5V7.4c0-.93.26-1.56 1.59-1.56h1.7V2.98A22.7 22.7 0 0 0 14.4 2.85c-2.63 0-4.43 1.6-4.43 4.55v2.25H7.2v3.2h2.77V21h3.53Z" />
+    <svg viewBox="0 0 24 24" className={cn("h-4 w-4", className)} aria-hidden="true" fill="currentColor">
+      <path d="M14.5 8.5V6.8c0-.7.5-1.1 1.2-1.1h1.3V3h-2.3C12.2 3 11 4.4 11 6.6v1.9H9v2.7h2V21h3.5v-9.8h2.3l.3-2.7h-2.6Z" />
     </svg>
   );
 }
 
-export function InstagramIcon(props: SVGProps<SVGSVGElement>) {
+export function InstagramIcon({ className }: IconProps) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true" {...props}>
-      <rect x="3.5" y="3.5" width="17" height="17" rx="4.5" />
-      <circle cx="12" cy="12" r="4" />
-      <circle cx="17" cy="7" r="0.9" fill="currentColor" stroke="none" />
+    <svg viewBox="0 0 24 24" className={cn("h-4 w-4", className)} aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6">
+      <rect x="4" y="4" width="16" height="16" rx="4" />
+      <circle cx="12" cy="12" r="3.4" />
+      <circle cx="17.2" cy="6.8" r="0.8" fill="currentColor" stroke="none" />
     </svg>
   );
 }
 
-export function YoutubeIcon(props: SVGProps<SVGSVGElement>) {
+export function YoutubeIcon({ className }: IconProps) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true" {...props}>
-      <rect x="2.5" y="5.5" width="19" height="13" rx="4" />
-      <path d="M10.5 9.5v5l4.5-2.5-4.5-2.5Z" fill="currentColor" stroke="none" />
+    <svg viewBox="0 0 24 24" className={cn("h-4 w-4", className)} aria-hidden="true" fill="currentColor">
+      <path d="M22 12.2s0-3.1-.4-4.4c-.2-.8-.9-1.5-1.7-1.7C18.5 5.6 12 5.6 12 5.6s-6.5 0-7.9.5c-.8.2-1.5.9-1.7 1.7C2 9.1 2 12.2 2 12.2s0 3.1.4 4.4c.2.8.9 1.5 1.7 1.7 1.4.5 7.9.5 7.9.5s6.5 0 7.9-.5c.8-.2 1.5-.9 1.7-1.7.4-1.3.4-4.4.4-4.4ZM10.2 15.1V9.3l5.3 2.9-5.3 2.9Z" />
     </svg>
   );
 }

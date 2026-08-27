@@ -1,79 +1,57 @@
 import { PageHero } from "@/components/PageHero";
-import { Container } from "@/components/ui/Container";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { Reveal } from "@/components/ui/Reveal";
 import { Timeline } from "@/components/Timeline";
-import type { TimelineEntry } from "@/data/content";
-import { lifeTimeline } from "@/data/content";
-
-const pathToSainthood = lifeTimeline.filter((entry) => ["1981", "2016–2017", "2023"].includes(entry.year));
-
-const shrineMilestones: TimelineEntry[] = [
-  {
-    year: "2017",
-    title: "A Home for the Beatification",
-    description:
-      "Following the September 2017 beatification Mass in Oklahoma City — attended by more than 20,000 pilgrims — the Archdiocese committed to building a permanent shrine so the newly Blessed Stanley Rother would have a lasting home for pilgrimage and prayer.",
-  },
-  {
-    year: "2018",
-    title: "Groundbreaking",
-    description:
-      "Ground was broken on farmland northeast of Oklahoma City, chosen for its proximity to Rother's boyhood home in Okarche and its capacity to welcome pilgrim buses, school groups, and outdoor feast-day crowds.",
-  },
-  {
-    year: "2020",
-    title: "Foundations Through a Pandemic",
-    description:
-      "Construction of the Pilgrim Center and Shrine Church continued through 2020, with craftsmen sourcing stone, timber, and stained glass to reflect both Oklahoma's plains heritage and Guatemala's highland culture.",
-  },
-  {
-    year: "2023",
-    title: "Dedication & Opening",
-    description:
-      "The Shrine Church was dedicated and the grounds opened to pilgrims, completing a promise made at the beatification six years earlier — a home where Blessed Stanley's story could be walked, not just read.",
-  },
-];
+import { SafeImage } from "@/components/SafeImage";
+import { Container } from "@/components/ui/Container";
+import { Reveal } from "@/components/ui/Reveal";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { images, lifeTimeline } from "@/data/content";
 
 export function History() {
   return (
     <div>
       <PageHero
-        eyebrow="Our History"
+        eyebrow="The Shrine"
         title="History of the Shrine"
-        description="From a beatification Mass that filled an Oklahoma City arena to a permanent home for pilgrimage on Tepeyac Hill."
-        image="https://images.pexels.com/photos/10244422/pexels-photo-10244422.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1000&w=1800"
+        description="From beatification on an Oklahoma field in 2017 to a national place of pilgrimage."
+        image={images.hero}
+        compact
       />
 
       <section className="py-24 sm:py-28">
-        <Container>
-          <Reveal>
-            <SectionHeading
-              eyebrow="Path to Sainthood"
-              title="From martyrdom to beatification"
-              description="Three moments from Blessed Stanley's life mark the road that led here — his death in 1981, his beatification in 2017, and the Shrine's opening in 2023."
-              align="center"
+        <Container className="grid gap-16 lg:grid-cols-[1fr_0.9fr] lg:items-start">
+          <div>
+            <Reveal>
+              <SectionHeading
+                eyebrow="A National Home"
+                title="Built so the shepherd could be visited"
+                description="The shrine church was designed in the Spanish mission style, echoing the parish Father Rother served in Santiago Atitlán."
+              />
+            </Reveal>
+            <div className="mt-12">
+              <Timeline entries={lifeTimeline.slice(6)} />
+            </div>
+            <Reveal className="mt-12 space-y-4 text-base leading-relaxed text-shrine-charcoal/85">
+              <p>
+                After the 2017 beatification — the first of a U.S.-born priest and martyr — the
+                Archdiocese of Oklahoma City set out to build a place large enough for the
+                pilgrims already arriving. The campus opened in 2023: a church seating more than
+                a thousand, a museum and pilgrim center, and Tepeyac Hill dedicated to Our Lady
+                of Guadalupe.
+              </p>
+              <p>
+                His tomb is here. His heart remains in Guatemala. The shrine holds both halves of
+                that story so visitors can pray them as one.
+              </p>
+            </Reveal>
+          </div>
+          <Reveal className="lg:sticky lg:top-28">
+            <SafeImage
+              src={images.hero}
+              fallback={images.heroFallback}
+              alt="The Blessed Stanley Rother Shrine under a clear Oklahoma sky"
+              className="h-[28rem] w-full object-cover shadow-shrine-lg sm:h-[36rem]"
             />
           </Reveal>
-          <div className="mx-auto mt-14 max-w-4xl">
-            <Timeline entries={pathToSainthood} />
-          </div>
-        </Container>
-      </section>
-
-      <section className="bg-shrine-parchment py-24 sm:py-28">
-        <Container>
-          <Reveal>
-            <SectionHeading
-              eyebrow="Building the Shrine"
-              title="How Tepeyac Hill became sacred ground"
-              description="Six years separate the beatification Mass from the Shrine's dedication — years of fundraising, design, and construction guided by one goal: a place worthy of the story."
-              align="center"
-            />
-          </Reveal>
-          <div className="mx-auto mt-14 max-w-4xl">
-            <Timeline entries={shrineMilestones} />
-          </div>
         </Container>
       </section>
     </div>
