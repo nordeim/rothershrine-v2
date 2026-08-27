@@ -1,0 +1,3 @@
+please meticulously convert the 'clone-plan-rothershrine' document into a markdown file for your future reference and alignment going forward. Next, meticulously review and validate the plan against the relevant skills from the   'my-pi-agent' repo to help you complete your task of cloning the `https://www.rothershrine.org/` website successfully. You can review https://github.com/nordeim/my-pi-agent/blob/main/skills/skills-catalog.md for the relevant skills in the 'my-pi-agent' repo
+
+Next, convert the plan into a detailed ToDo list before meticulously executing the plan in stages sequentially to complete the building of a complete production-ready and enterprise grade codebase for the 'cloned' website. Use the TDD approach to make code changes.

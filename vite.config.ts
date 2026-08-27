@@ -2,6 +2,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
+/// <reference types="vitest/config" />
 import { defineConfig } from "vite";
 import { viteSingleFile } from "vite-plugin-singlefile";
 
@@ -14,6 +15,19 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
+    },
+  },
+  // @ts-expect-error — vitest augments vite UserConfig via `vitest/config` types
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: ["src/test/setup.ts"],
+    include: ["src/**/*.{test,spec}.{ts,tsx}"],
+    exclude: ["e2e/**", "node_modules/**", "playwright-report/**", "test-results/**"],
+  },
+  server: {
+    watch: {
+      ignored: ["**/skills/**", "**/dist/**", "**/playwright-report/**", "**/test-results/**", "**/coverage/**"],
     },
   },
 });
