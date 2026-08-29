@@ -1,6 +1,6 @@
 # Blessed Stanley Rother Shrine
 
-![version 1.3.0](https://img.shields.io/badge/version-1.3.0-33100f)
+![version 1.4.0](https://img.shields.io/badge/version-1.4.0-33100f)
 ![React](https://img.shields.io/badge/React-19.2.8-61DAFB?logo=react&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-7.3.6-646CFF?logo=vite&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.3.3-06B6D4?logo=tailwindcss&logoColor=white)
@@ -40,8 +40,8 @@ Every row below is implemented — no placeholders.
 | Icons | lucide-react | `1.34.0` | Header/footer + page iconography |
 | Utils | clsx + tailwind-merge | `2.1.1` / `3.6.0` | `cn()` class merging |
 | Bundling | vite-plugin-singlefile | `2.3.3` | Inlines JS+CSS into `dist/index.html` (`public/images/` copied to `dist/images/`) |
-| Testing | Vitest + Testing Library + jsdom | `3.2.6` / `16.2.0` / `26.1.0` | `globals: true`, `environment: jsdom`, `setupFiles: src/test/setup.ts` (6 files / 29 tests) |
-| E2E | Playwright | `1.55.1` | `chromium`, `webServer` → `pnpm exec vite --port 5173 --host 127.0.0.1 --strictPort`, `e2e/` (20 tests: smoke 7 + navigation 5 + what-to-see 4 + give-faq 4) |
+| Testing | Vitest + Testing Library + jsdom | `3.2.6` / `16.2.0` / `26.1.0` | `globals: true`, `environment: jsdom`, `setupFiles: src/test/setup.ts` (11 files / 56 tests) |
+| E2E | Playwright | `1.55.1` | `chromium`, `webServer` → `pnpm exec vite --port 5173 --host 127.0.0.1 --strictPort`, `e2e/` (25 tests: smoke 10 + navigation 6 + what-to-see 4 + give-faq 5) |
 | Linting | ESLint flat + typescript-eslint + react-hooks | `9.39.5` / `8.28.0` / `5.2.0` | `eslint . --max-warnings 0`, `eslint.config.js` |
 | Fonts | Google Fonts | — | `Fraunces` (display) + `Source Sans 3` (body) via `index.html` |
 
@@ -83,8 +83,9 @@ flowchart TB
 │   ├── 📄 main.tsx          # StrictMode + createRoot
 │   ├── 📄 index.css         # @theme shrine-* tokens (24 colors + 2 shadows) + @layer base/utilities
 │   ├── 📂 components/
-│   │   ├── 📄 Layout.tsx    # Outlet + scroll/hash restoration + SkipLink (focus-moving, hash-preserving)
-│   │   ├── 📄 Header.tsx    # fixed maroon-950 bar, useScrolled(16), hover+click dropdown, mobile drawer
+│   │   ├── 📄 Layout.tsx    # Outlet + scroll/hash restoration + SkipLink (focus-moving, hash-preserving) + BackToTop mount
+│   │   ├── 📄 Header.tsx    # fixed maroon-950 bar, useScrolled(16), hover+click dropdown (menu-in), mobile drawer (drawer-in), aria-current contract
+│   │   ├── 📄 BackToTop.tsx # floating 44px back-to-top (scrollY > 480, aria-hidden when hidden, reduced-motion aware, hash-preserving)
 │   │   ├── 📄 Footer.tsx    # 4-col + divider-weave-thin + SocialIcons + site.ts address
 │   │   ├── 📄 PageHero.tsx  # maroon hero primitive (compact? + bg-grain + gradients)
 │   │   ├── 📄 Emblem.tsx    # inline SVG emblem (crook + wheat)
@@ -92,7 +93,7 @@ flowchart TB
 │   │   ├── 📄 SkipLink.tsx  # skip-to-main-content
 │   │   ├── 📄 SocialIcons.tsx # hand-drawn brand glyphs (lucide has no brand icons)
 │   │   ├── 📄 Timeline.tsx  # left rail (border-l) + Reveal
-│   │   └── 📂 ui/           # Button (to/href/button + icon), Container, SectionHeading, Accordion, Reveal
+│   │   └── 📂 ui/           # Button (to/href/button + icon, external links target=_blank + rel=noopener), Container, SectionHeading, Accordion (inert closed panels), Reveal
 │   ├── 📂 hooks/
 │   │   └── 📄 useScrolled.ts # scrollY > threshold → scrolled boolean
 │   ├── 📂 pages/            # Home, AboutRother, History, WhatToSee, Pilgrimage, NewsEvents, Volunteer, Give, FAQ, NotFound (all named exports)
@@ -104,18 +105,20 @@ flowchart TB
 │   │   └── 📄 cn.ts         # twMerge(clsx) — always merge via cn()
 │   ├── 📂 test/
 │   │   └── 📄 setup.ts      # vitest setup (`@testing-library/jest-dom` + IntersectionObserver mock)
-│   └── (adjacent tests: `src/utils/cn.test.ts`, `src/data/{nav,content,site}.test.ts`, `src/components/ui/Button.test.tsx`, `src/components/SkipLink.test.tsx` — 6 files / 29 tests)
+│   └── (adjacent tests: `cn`, `nav`, `content`, `site`, `ui/Button`, `ui/Accordion`, `SkipLink`, `SafeImage`, `BackToTop`, `Header`, `pages/dark-band-contrast` — 11 files / 56 tests)
 ├── 📂 e2e/
-│   ├── 📄 smoke.spec.ts     # 7 smoke (alias routes + hash anchors + mobile drawer + NotFound)
-│   ├── 📄 navigation.spec.ts# 5 desktop hover + keyboard + skip + footer + Give
+│   ├── 📄 smoke.spec.ts     # 10 smoke (alias routes + hash anchors + mobile drawer + NotFound + hero contrast/motion + BackToTop + event chips)
+│   ├── 📄 navigation.spec.ts# 6 desktop hover + keyboard + skip + footer + Give + aria-current contract
 │   ├── 📄 what-to-see.spec.ts# 4 sections + imageAlt + fallback + jump nav
-│   ├── 📄 give-faq.spec.ts  # 4 Give 8 options + FAQ accordion + Pilgrimage mailto
+│   ├── 📄 give-faq.spec.ts  # 5 Give 8 options + FAQ accordion + closed-panel inert + Pilgrimage mailto
 │   └── 📄 helpers.ts        # gotoHash helper
 ├── 📄 .github/workflows/ci.yml # CI: lint → typecheck → test → test:e2e → build
 ├── 📂 docs/
 │   ├── 📄 prompts.md        # Intent lineage
 │   ├── 📄 alignment-report.md + codebase-alignment-validation.md  # Prior doc-alignment audit
-│   └── 📄 fresh-clone-audit-2026-08-27.md  # Tiered code review + security audit (severity-ranked, evidence-backed)
+│   ├── 📄 fresh-clone-audit-2026-08-27.md  # Tiered code review + security audit (severity-ranked, evidence-backed)
+│   ├── 📄 design-remediation-plan-2026-08-29.md  # "Sacred Motion, Upstream" UI/UX remediation plan (C-1–C-3, M-1–M-8, A-1–A-3, D-1)
+│   └── 📄 design-remediation-validation-2026-08-29.md  # Post-implementation validation (5-gate + rendered contrast evidence)
 ├── 📄 CLAUDE.md             # Deep conventions (authoritative)
 └── 📄 AGENTS.md             # Compact agent cheat sheet
 ```
@@ -152,8 +155,8 @@ pnpm preview
 ```bash
 pnpm lint               # eslint flat — expect no output (clean)
 pnpm typecheck         # tsc --noEmit — expect no output (clean)
-pnpm test               # vitest jsdom — expect 6 files / 29 passed
-pnpm test:e2e           # Playwright chromium — expect 20 passed (smoke 7 + navigation 5 + what-to-see 4 + give-faq 4)
+pnpm test               # vitest jsdom — expect 11 files / 56 passed
+pnpm test:e2e           # Playwright chromium — expect 25 passed (smoke 10 + navigation 6 + what-to-see 4 + give-faq 5)
 pnpm build              # expect: "✓ built in ~3s" + "Inlining: index-*.js / style-*.css"
 ls -lh dist/index.html  # expect: single HTML file, no separate assets chunk
 ```
@@ -163,8 +166,8 @@ ls -lh dist/index.html  # expect: single HTML file, no separate assets chunk
 | `pnpm dev` | Vite ready on `:5173`, HMR active |
 | `pnpm lint` | Exit `0`, no warnings (`--max-warnings 0`) |
 | `pnpm typecheck` | Exit `0`, no errors |
-| `pnpm test` | `6 test files — 29 passed` |
-| `pnpm test:e2e` | `20 passed` (smoke 7 + navigation 5 + what-to-see 4 + give-faq 4, chromium) |
+| `pnpm test` | `11 test files — 56 passed` |
+| `pnpm test:e2e` | `25 passed` (smoke 10 + navigation 6 + what-to-see 4 + give-faq 5, chromium) |
 | `pnpm build` | `dist/index.html` exists (~372 kB, gzip ~109 kB) + `dist/images/` |
 | `pnpm preview` | Prod preview on `:4173`, all alias routes + `#hash` anchors navigate |
 
@@ -199,6 +202,8 @@ Tokens live in `src/index.css` `@theme`. Extend there — never use arbitrary `b
 
 **Typography:** `Fraunces` (display, quote, `font-display` / `h1–h4`) + `Source Sans 3` (body, `font-sans` / `font-body` alias) — loaded in `index.html`, set in `@theme` + `@layer base`. Utilities: `text-balance`, `bg-adobe-texture`, `bg-grain`, `divider-weave` / `divider-weave-thin`, `reveal` / `reveal-visible`, `skip-link`, `mask-fade-b`.
 
+**Sacred Motion utilities (v1.4.0):** `rise-in` (+ `rise-in-d1…d4` staged delays), `menu-in` (desktop dropdown), `drawer-in` (mobile drawer), `dot-pulse` (timeline halo), `card-lift` (Give/Volunteer cards), `link-underline` (footer links) — all `transform`/`opacity` only, 180–700ms ease-out, and fully disabled under `prefers-reduced-motion`. Dark-band headings (home hero, CTA bands) carry explicit `text-shrine-cream` — never rely on the global `h1–h4` maroon rule on dark surfaces.
+
 ## Deployment
 
 Primary artifact `dist/index.html` (+ `dist/images/`) — no server, no env vars, no rewrites needed. The artifact ships a scoped `Content-Security-Policy` meta (inline JS/CSS from the singlefile build, Google Fonts, Pexels imagery, Google Maps iframe) — set HSTS/X-Content-Type-Options at the CDN/host layer, which a static file cannot control.
@@ -224,7 +229,7 @@ This repo follows the six-phase workflow in `CLAUDE.md` (ANALYZE → PLAN → VA
 - **Conventions:** `PascalCase.tsx` for components/pages, `camelCase.ts` for data/utils, `PrimaryNav` single-source, alias routes preserved, `cn()` for merges, `shrine-*` tokens only.
 - **Pre-push gate:** `pnpm lint && pnpm typecheck && pnpm test && pnpm test:e2e && pnpm build` — all five green.
 
-> `skills/` is vendored, git-tracked reference content (agent skills index: `skills/skills-catalog.md`) — not project source; lint/build tooling ignores it. See `AGENTS.md` for the compact cheat sheet and `docs/fresh-clone-audit-2026-08-27.md` for the latest tiered code review + security audit.
+> `skills/` is vendored, git-tracked reference content (agent skills index: `skills/skills-catalog.md`) — not project source; lint/build tooling ignores it. See `AGENTS.md` for the compact cheat sheet, `docs/fresh-clone-audit-2026-08-27.md` for the latest tiered code review + security audit, and `docs/design-remediation-plan-2026-08-29.md` + `docs/design-remediation-validation-2026-08-29.md` for the v1.4.0 "Sacred Motion, Upstream" UI/UX remediation.
 
 ## Troubleshooting
 
