@@ -108,7 +108,7 @@ test.describe("smoke — Sacred Motion remediation (contrast, motion, BackToTop)
     const backToTop = page.getByTestId("back-to-top");
     await expect(backToTop).toHaveAttribute("aria-hidden", "true");
 
-    await page.evaluate(() => window.scrollTo({ top: 1200, behavior: "instant" }));
+    await page.evaluate(() => window.scrollTo({ top: 1200, behavior: "auto" }));
     await expect(backToTop).toBeVisible();
     await expect(backToTop).not.toHaveAttribute("aria-hidden");
     await expect(page.getByRole("button", { name: /back to top/i })).toBeVisible();

@@ -17,11 +17,10 @@ if (!("IntersectionObserver" in globalThis)) {
   globalThis.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver;
 }
 
-// jsdom lacks window.scrollTo + Element.scrollIntoView — stub to avoid
-// Layout/SkipLink errors in tests (jsdom has no layout engine)
-if (!window.scrollTo) {
-  window.scrollTo = () => {};
-}
-if (!Element.prototype.scrollIntoView) {
-  Element.prototype.scrollIntoView = () => {};
-}
+// jsdom ships a throwing stub for window.scrollTo ("Not implemented") — the
+// conditional guard `if (!window.scrollTo)` never fires. Unconditionally
+// define so any test calling scrollTo without a per-test spy does not throw.
+// matchMedia is intentionally not stubbed globally (jsdom lacks it) — per-suite
+// stubs in BackToTop.test.tsx cover `prefers-reduced-motion` branching.
+Object.defineProperty(window, "scrollTo", { value: () => {}, writable: true, configurable: true });
+Object.defineProperty(Element.prototype, "scrollIntoView", { value: () => {}, writable: true, configurable: true });
