@@ -12,6 +12,10 @@ import { Give } from "@/pages/Give";
  * out with an explicit `text-shrine-cream` class or it renders ~1.3:1 on the
  * dark band (invisible). PageHero/NotFound already opt out; these tests lock
  * Home and Give to the same contract.
+ *
+ * These are fast class-presence guards — the computed-color proof is in
+ * e2e/smoke.spec.ts `toHaveCSS("color","rgb(250, 246, 236)")` which verifies
+ * the cascade actually resolves cream over the global rule on the rendered DOM.
  */
 describe("dark-band heading contrast contract", () => {
   it("Home hero h1 carries an explicit cream text color", () => {
