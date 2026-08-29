@@ -132,7 +132,12 @@ export function Header() {
 
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
           {primaryNav.map((item) => {
-            const isActive = pathMatches(pathname, item.to);
+            // A dropdown parent is "current" when any of its child routes is
+            // active — its own `to` alone misses sibling children (e.g. the
+            // About parent while /history is open).
+            const childActive =
+              item.children?.some((child) => pathMatches(pathname, child.to)) ?? false;
+            const isActive = pathMatches(pathname, item.to) || childActive;
             return (
               <div
                 key={item.label}
@@ -152,6 +157,7 @@ export function Header() {
                     type="button"
                     aria-haspopup="true"
                     aria-expanded={openDesktopMenu === item.label}
+                    aria-current={isActive ? "true" : undefined}
                     className={cn(
                       "inline-flex items-center gap-1 rounded-sm px-3 py-2 text-[13px] font-semibold uppercase tracking-wide text-shrine-cream/85 transition-colors hover:text-shrine-gold-300",
                       isActive && "text-shrine-gold-300",
@@ -166,6 +172,7 @@ export function Header() {
                 ) : (
                   <Link
                     to={item.to}
+                    aria-current={isActive ? "page" : undefined}
                     className={cn(
                       "block rounded-sm px-3 py-2 text-[13px] font-semibold uppercase tracking-wide text-shrine-cream/85 transition-colors hover:text-shrine-gold-300",
                       isActive && "text-shrine-gold-300",
@@ -177,7 +184,7 @@ export function Header() {
 
                 {item.children && openDesktopMenu === item.label ? (
                   <div className="absolute left-0 top-full z-50 min-w-[18rem] pt-2">
-                    <ul className="rounded-sm border border-shrine-gold-500/20 bg-shrine-maroon-950 py-2 shadow-shrine-lg">
+                    <ul className="menu-in rounded-sm border border-shrine-gold-500/20 bg-shrine-maroon-950 py-2 shadow-shrine-lg">
                       {item.children.map((child) => (
                         <li key={child.to}>
                           <Link
@@ -228,7 +235,7 @@ export function Header() {
           role="dialog"
           aria-modal="true"
           aria-label="Mobile navigation"
-          className="fixed inset-x-0 top-[4.25rem] bottom-0 overflow-y-auto bg-shrine-maroon-950 px-5 pb-10 sm:top-[4.75rem] lg:hidden"
+          className="drawer-in fixed inset-x-0 top-[4.25rem] bottom-0 overflow-y-auto bg-shrine-maroon-950 px-5 pb-10 sm:top-[4.75rem] lg:hidden"
         >
           <nav aria-label="Mobile" className="mx-auto max-w-lg pt-6">
             <ul className="space-y-1">
@@ -239,7 +246,16 @@ export function Header() {
                       <button
                         type="button"
                         aria-expanded={openMobileSection === item.label}
-                        className="flex w-full items-center justify-between py-4 text-left font-display text-2xl text-shrine-cream"
+                        aria-current={
+                          item.children.some((child) => pathMatches(pathname, child.to))
+                            ? "true"
+                            : undefined
+                        }
+                        className={cn(
+                          "flex w-full items-center justify-between py-4 text-left font-display text-2xl text-shrine-cream",
+                          item.children.some((child) => pathMatches(pathname, child.to)) &&
+                            "text-shrine-gold-300",
+                        )}
                         onClick={() =>
                           setOpenMobileSection((current) =>
                             current === item.label ? null : item.label,
@@ -273,7 +289,11 @@ export function Header() {
                   ) : (
                     <Link
                       to={item.to}
-                      className="block py-4 font-display text-2xl text-shrine-cream"
+                      aria-current={pathMatches(pathname, item.to) ? "page" : undefined}
+                      className={cn(
+                        "block py-4 font-display text-2xl text-shrine-cream",
+                        pathMatches(pathname, item.to) && "text-shrine-gold-300",
+                      )}
                       onClick={() => setMobileOpen(false)}
                     >
                       {item.label}

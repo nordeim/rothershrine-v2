@@ -77,3 +77,26 @@ test.describe("navigation — desktop, keyboard, skip, footer", () => {
     await expect(page.getByRole("heading", { name: /^Give$/i }).first()).toBeVisible();
   });
 });
+
+test.describe("navigation — current-page contract (aria-current)", () => {
+  test("active top-level link carries aria-current=page; dropdown parent marks child-active routes", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    const nav = page.getByRole("navigation", { name: "Primary" });
+
+    await page.goto("/#/pilgrimage");
+    await expect(nav.getByRole("link", { name: "Pilgrimage" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+
+    // /history is a child of the About dropdown — the parent trigger must
+    // surface aria-current=true even though its own `to` points elsewhere.
+    await page.goto("/#/history");
+    await expect(nav.getByRole("button", { name: "About" })).toHaveAttribute(
+      "aria-current",
+      "true",
+    );
+  });
+});

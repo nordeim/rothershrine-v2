@@ -86,3 +86,45 @@ test.describe("smoke — routing & hash anchors", () => {
     await expect(page.getByRole("button", { name: /Open menu/i })).toBeVisible();
   });
 });
+
+test.describe("smoke — Sacred Motion remediation (contrast, motion, BackToTop)", () => {
+  test("hero h1 renders cream on the dark overlay with staged rise-in motion", async ({ page }) => {
+    await page.goto("/#/");
+    const hero = page.getByRole("heading", { level: 1, name: /shepherd who stayed/i });
+    // Guard classes — explicit cream beats the global h1–h4 maroon-700 rule,
+    // and rise-in stages the entrance (reduced-motion renders final state).
+    await expect(hero).toHaveClass(/rise-in/);
+    await expect(hero).toHaveClass(/text-shrine-cream/);
+    // Rendered contrast: cream #faf6ec on the maroon-950 photo overlay.
+    await expect(hero).toHaveCSS("color", "rgb(250, 246, 236)");
+  });
+
+  test("back-to-top appears after deep scroll and returns to top without touching the hash", async ({
+    page,
+  }) => {
+    await page.goto("/#/history");
+    // aria-hidden excludes the button from the a11y tree — query by testid
+    // while hidden; role+name once it becomes visible.
+    const backToTop = page.getByTestId("back-to-top");
+    await expect(backToTop).toHaveAttribute("aria-hidden", "true");
+
+    await page.evaluate(() => window.scrollTo({ top: 1200, behavior: "instant" }));
+    await expect(backToTop).toBeVisible();
+    await expect(backToTop).not.toHaveAttribute("aria-hidden");
+    await expect(page.getByRole("button", { name: /back to top/i })).toBeVisible();
+
+    await backToTop.click();
+    await page.waitForFunction(() => window.scrollY === 0, undefined, { timeout: 5_000 });
+    await expect(backToTop).toHaveAttribute("aria-hidden", "true");
+    // HashRouter contract: scrolling must never rewrite the route hash.
+    await expect(page).toHaveURL(/#\/history/);
+  });
+
+  test("home event rows use a bordered gold category chip", async ({ page }) => {
+    await page.goto("/#/");
+    const chip = page.getByText("Feast", { exact: true }).first();
+    await expect(chip).toBeVisible();
+    await expect(chip).toHaveClass(/border/);
+    await expect(chip).toHaveClass(/uppercase/);
+  });
+});

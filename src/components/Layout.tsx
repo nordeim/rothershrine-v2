@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
+import { BackToTop } from "@/components/BackToTop";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { SkipLink } from "@/components/SkipLink";
@@ -27,10 +28,11 @@ export function Layout() {
     if (id) {
       const el = document.getElementById(id);
       if (el) {
-        window.setTimeout(() => {
+        const timer = window.setTimeout(() => {
           el.scrollIntoView({ behavior: "smooth", block: "start" });
         }, 80);
-        return;
+        // Clear on route change so a pending scroll cannot fire after unmount.
+        return () => window.clearTimeout(timer);
       }
     }
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
@@ -44,6 +46,7 @@ export function Layout() {
         <Outlet />
       </main>
       <Footer />
+      <BackToTop />
     </div>
   );
 }

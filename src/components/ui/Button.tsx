@@ -41,15 +41,13 @@ type NativeButtonProps = BaseProps &
 export type ButtonProps = LinkButtonProps | AnchorButtonProps | NativeButtonProps;
 
 const baseClasses =
-  "inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 text-sm font-semibold uppercase tracking-wide transition-[transform,box-shadow,background-color,color,border-color,opacity] duration-300 ease-out hover:-translate-y-0.5 hover:shadow-shrine focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-shrine-gold-500 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-none";
+  "inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 text-sm font-semibold uppercase tracking-wide transition-[transform,box-shadow,background-color,color,border-color,opacity] duration-300 ease-out hover:-translate-y-0.5 hover:shadow-shrine active:translate-y-0 active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-shrine-gold-500 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-none disabled:active:scale-100";
 
 export function Button(props: ButtonProps) {
   const classes = cn(baseClasses, variantClasses[props.variant ?? "primary"], props.className);
 
   if ("to" in props && props.to) {
-    const { to, variant, children, className, icon, ...anchorRest } = props;
-    void variant;
-    void className;
+    const { to, variant: _variant, children, className: _className, icon, ...anchorRest } = props;
     return (
       <Link to={to} className={classes} {...anchorRest}>
         {children}
@@ -59,20 +57,25 @@ export function Button(props: ButtonProps) {
   }
 
   if ("href" in props && props.href) {
-    const { href, variant, children, className, icon, ...anchorRest } = props;
-    void variant;
-    void className;
+    const { href, variant: _variant, children, className: _className, icon, ...anchorRest } = props;
+    // External links open in a new tab, decoupled from this SPA (HashRouter
+    // contract) and hardened against reverse tabnabbing.
+    const external = /^https?:\/\//.test(href);
     return (
-      <a href={href} className={classes} {...anchorRest}>
+      <a
+        href={href}
+        className={classes}
+        {...anchorRest}
+        {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      >
         {children}
         {icon}
       </a>
     );
   }
 
-  const { variant, children, className, icon, ...buttonRest } = props as NativeButtonProps;
-  void variant;
-  void className;
+  const { variant: _variant, children, className: _className, icon, ...buttonRest } =
+    props as NativeButtonProps;
   return (
     <button type="button" className={classes} {...buttonRest}>
       {children}

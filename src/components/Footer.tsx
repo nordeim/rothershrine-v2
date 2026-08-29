@@ -27,23 +27,23 @@ export function Footer() {
           </p>
           <div className="mt-6 flex items-center gap-3">
             <a
-              href="https://www.facebook.com/RotherShrine"
+              href="https://www.facebook.com/RotherShrine" target="_blank" rel="noopener noreferrer"
               aria-label="Rother Shrine on Facebook"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-shrine-cream/25 transition-colors hover:border-shrine-gold-300 hover:text-shrine-gold-300"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-shrine-cream/25 transition-[border-color,color,transform] duration-300 hover:-translate-y-0.5 hover:border-shrine-gold-300 hover:text-shrine-gold-300"
             >
               <FacebookIcon className="h-4 w-4" />
             </a>
             <a
-              href="https://www.instagram.com/rothershrine/"
+              href="https://www.instagram.com/rothershrine/" target="_blank" rel="noopener noreferrer"
               aria-label="Rother Shrine on Instagram"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-shrine-cream/25 transition-colors hover:border-shrine-gold-300 hover:text-shrine-gold-300"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-shrine-cream/25 transition-[border-color,color,transform] duration-300 hover:-translate-y-0.5 hover:border-shrine-gold-300 hover:text-shrine-gold-300"
             >
               <InstagramIcon className="h-4 w-4" />
             </a>
             <a
-              href="https://www.youtube.com/@rothershrine"
+              href="https://www.youtube.com/@rothershrine" target="_blank" rel="noopener noreferrer"
               aria-label="Rother Shrine on YouTube"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-shrine-cream/25 transition-colors hover:border-shrine-gold-300 hover:text-shrine-gold-300"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-shrine-cream/25 transition-[border-color,color,transform] duration-300 hover:-translate-y-0.5 hover:border-shrine-gold-300 hover:text-shrine-gold-300"
             >
               <YoutubeIcon className="h-4 w-4" />
             </a>
@@ -59,7 +59,7 @@ export function Footer() {
               <li key={link.to}>
                 <Link
                   to={link.to}
-                  className="text-sm text-shrine-cream/75 transition-colors hover:text-shrine-cream"
+                  className="link-underline w-fit text-sm text-shrine-cream/75 transition-colors hover:text-shrine-cream"
                 >
                   {link.label}
                 </Link>
@@ -77,7 +77,7 @@ export function Footer() {
               <li key={link.to}>
                 <Link
                   to={link.to}
-                  className="text-sm text-shrine-cream/75 transition-colors hover:text-shrine-cream"
+                  className="link-underline w-fit text-sm text-shrine-cream/75 transition-colors hover:text-shrine-cream"
                 >
                   {link.label}
                 </Link>

@@ -83,8 +83,10 @@ export function Accordion({ items }: AccordionProps) {
               id={panelId}
               role="region"
               aria-labelledby={buttonId}
+              aria-hidden={isOpen ? undefined : true}
+              inert={!isOpen ? true : undefined}
               className={cn(
-                "grid transition-[grid-template-rows] duration-300 ease-in-out",
+                "grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none",
                 isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
               )}
             >

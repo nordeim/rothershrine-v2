@@ -40,4 +40,25 @@ describe("Button", () => {
     render(<Button icon={<span data-testid="icon">★</span>}>WithIcon</Button>);
     expect(screen.getByTestId("icon")).toBeInTheDocument();
   });
+
+  it("gives press feedback via active:scale in the base classes", () => {
+    render(<Button>Press</Button>);
+    const btn = screen.getByRole("button", { name: "Press" });
+    expect(btn.className).toMatch(/active:scale-\[0\.98\]/);
+    expect(btn.className).toMatch(/active:translate-y-0/);
+  });
+
+  it("opens external href in a new tab with rel=noopener noreferrer", () => {
+    render(<Button href="https://www.rothershrine.org/give">Give Online Now</Button>);
+    const anchor = screen.getByRole("link", { name: "Give Online Now" });
+    expect(anchor).toHaveAttribute("target", "_blank");
+    expect(anchor.getAttribute("rel")).toContain("noopener");
+    expect(anchor.getAttribute("rel")).toContain("noreferrer");
+  });
+
+  it("leaves internal anchors same-tab (no target)", () => {
+    renderWithRouter(<Button href="/pilgrimage#visit">Internal</Button>);
+    const anchor = screen.getByRole("link", { name: "Internal" });
+    expect(anchor).not.toHaveAttribute("target");
+  });
 });

@@ -57,7 +57,7 @@ export function Volunteer() {
           <div className="mt-14 grid gap-6 md:grid-cols-2">
             {roles.map((role, index) => (
               <Reveal key={role.title} delay={index * 70}>
-                <article className="h-full border border-shrine-stone bg-shrine-cream p-7 transition-shadow hover:shadow-shrine">
+                <article className="card-lift h-full border border-shrine-stone bg-shrine-cream p-7">
                   <h3 className="font-display text-2xl text-shrine-maroon-700">{role.title}</h3>
                   <p className="mt-3 text-sm leading-relaxed text-shrine-charcoal/80">{role.description}</p>
                   <p className="mt-5 text-xs font-semibold uppercase tracking-[0.2em] text-shrine-gold-600">

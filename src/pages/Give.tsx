@@ -45,7 +45,7 @@ export function Give() {
               const Icon = iconMap[option.icon];
               return (
                 <Reveal key={option.name} delay={(index % 4) * 90}>
-                  <div className="flex h-full flex-col border border-shrine-stone bg-shrine-cream p-6 transition-shadow hover:shadow-shrine">
+                  <div className="card-lift flex h-full flex-col border border-shrine-stone bg-shrine-cream p-6">
                     <span className="flex h-11 w-11 items-center justify-center rounded-full bg-shrine-maroon-50 text-shrine-maroon-600">
                       <Icon className="h-5 w-5" aria-hidden="true" />
                     </span>
@@ -70,7 +70,7 @@ export function Give() {
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-shrine-gold-300">
               Ready to Give?
             </p>
-            <h2 className="mx-auto mt-4 max-w-xl text-balance font-display text-3xl font-semibold sm:text-4xl">
+            <h2 className="mx-auto mt-4 max-w-xl text-balance font-display text-3xl font-semibold text-shrine-cream sm:text-4xl">
               A gift of any size carries a pilgrim forward.
             </h2>
             <div className="mt-9 flex flex-wrap items-center justify-center gap-4">

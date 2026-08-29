@@ -67,3 +67,21 @@ test.describe("Give + FAQ + Pilgrimage journeys", () => {
     await expect(page.getByText("Eight ways to support the mission")).toBeVisible();
   });
 });
+
+test.describe("FAQ closed-panel exposure (inert + aria-hidden)", () => {
+  test("closed FAQ panel is aria-hidden + inert and expands on click", async ({ page }) => {
+    await page.goto("/#/faq");
+    const secondQuestion = page.getByRole("button", { name: /Is there a cost to visit/i });
+    await expect(secondQuestion).toHaveAttribute("aria-expanded", "false");
+
+    const panelId = await secondQuestion.getAttribute("aria-controls");
+    const panel = page.locator(`#${panelId}`);
+    await expect(panel).toHaveAttribute("aria-hidden", "true");
+    await expect(panel).toHaveAttribute("inert", "");
+
+    await secondQuestion.click();
+    await expect(secondQuestion).toHaveAttribute("aria-expanded", "true");
+    await expect(panel).not.toHaveAttribute("aria-hidden");
+    await expect(panel).not.toHaveAttribute("inert");
+  });
+});

@@ -13,7 +13,7 @@ export function Timeline({ entries = lifeTimeline }: TimelineProps) {
         <Reveal as="li" key={`${entry.year}-${entry.title}`} delay={index * 60} className="relative">
           <span
             className={cn(
-              "absolute -left-[37px] top-1.5 h-3.5 w-3.5 rounded-full border-2 border-shrine-gold-500 bg-shrine-cream sm:-left-[53px]",
+              "dot-pulse absolute -left-[37px] top-1.5 h-3.5 w-3.5 rounded-full border-2 border-shrine-gold-500 bg-shrine-cream sm:-left-[53px]",
             )}
             aria-hidden="true"
           />

@@ -43,19 +43,19 @@ export function PageHero({
           compact ? "pt-32 pb-14 sm:pt-36 sm:pb-16" : "pt-36 pb-16 sm:pt-44 sm:pb-20",
         )}
       >
-        <p className="text-xs font-semibold uppercase tracking-[0.32em] text-shrine-gold-300">
+        <p className="rise-in text-xs font-semibold uppercase tracking-[0.32em] text-shrine-gold-300">
           {eyebrow}
         </p>
-        <div className="gold-rule-left mt-4 w-20" />
-        <h1 className="mt-5 max-w-3xl text-balance font-display text-4xl font-semibold leading-[1.08] text-shrine-cream sm:text-5xl lg:text-6xl">
+        <div className="gold-rule-left rise-in rise-in-d1 mt-4 w-20" />
+        <h1 className="rise-in rise-in-d1 mt-5 max-w-3xl text-balance font-display text-4xl font-semibold leading-[1.08] text-shrine-cream sm:text-5xl lg:text-6xl">
           {title}
         </h1>
         {description ? (
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-shrine-cream/80 sm:text-lg">
+          <p className="rise-in rise-in-d2 mt-5 max-w-xl text-base leading-relaxed text-shrine-cream/80 sm:text-lg">
             {description}
           </p>
         ) : null}
-        {children ? <div className="mt-8">{children}</div> : null}
+        {children ? <div className="rise-in rise-in-d3 mt-8">{children}</div> : null}
       </Container>
       <div className="divider-weave-thin relative" />
     </section>

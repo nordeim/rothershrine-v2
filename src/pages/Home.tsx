@@ -33,19 +33,19 @@ export function Home() {
         <Container className="relative flex min-h-[100svh] flex-col justify-end pb-16 pt-36 sm:pb-20 lg:pb-24">
           <div className="grid items-end gap-10 lg:grid-cols-[1.2fr_0.8fr]">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-shrine-gold-300">
+              <p className="rise-in text-xs font-semibold uppercase tracking-[0.35em] text-shrine-gold-300">
                 National Shrine · Oklahoma City
               </p>
-              <div className="gold-rule-left mt-5 w-24" />
-              <h1 className="mt-6 max-w-3xl text-balance font-display text-5xl font-medium leading-[0.98] italic sm:text-6xl lg:text-7xl">
+              <div className="gold-rule-left rise-in rise-in-d1 mt-5 w-24" />
+              <h1 className="rise-in rise-in-d1 mt-6 max-w-3xl text-balance font-display text-5xl font-medium leading-[0.98] italic text-shrine-cream sm:text-6xl lg:text-7xl">
                 The shepherd who stayed.
               </h1>
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-shrine-cream/80 sm:text-lg">
+              <p className="rise-in rise-in-d2 mt-6 max-w-xl text-base leading-relaxed text-shrine-cream/80 sm:text-lg">
                 Walk the story of Blessed Stanley Rother — Oklahoma farm boy, missionary priest,
                 and the first U.S.-born martyr to be beatified — through the Pilgrim Center,
                 Shrine Church, and Tepeyac Hill.
               </p>
-              <div className="mt-9 flex flex-wrap gap-4">
+              <div className="rise-in rise-in-d3 mt-9 flex flex-wrap gap-4">
                 <Button to="/pilgrimage" variant="primary" icon={<ArrowRight className="h-4 w-4" />}>
                   Plan Your Visit
                 </Button>
@@ -55,7 +55,7 @@ export function Home() {
               </div>
             </div>
 
-            <aside className="border border-shrine-gold-500/25 bg-shrine-maroon-950/70 p-6 shadow-shrine-lg backdrop-blur-sm sm:p-7">
+            <aside className="rise-in rise-in-d4 border border-shrine-gold-500/25 bg-shrine-maroon-950/70 p-6 shadow-shrine-lg backdrop-blur-sm sm:p-7">
               <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-shrine-gold-300">
                 Arrive today
               </p>
@@ -227,13 +227,13 @@ export function Home() {
           <div className="mt-12 divide-y divide-shrine-stone border-y border-shrine-stone">
             {upcomingEvents.map((event, index) => (
               <Reveal key={event.title} delay={index * 50}>
-                <article className="grid gap-4 py-8 md:grid-cols-[10rem_1fr_12rem] md:items-baseline">
+                <article className="grid gap-4 px-4 py-8 transition-colors duration-200 hover:bg-shrine-maroon-50/60 md:grid-cols-[10rem_1fr_12rem] md:items-baseline">
                   <p className="font-display text-lg text-shrine-maroon-600">{event.date}</p>
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-shrine-terracotta-500">
+                    <p className="inline-block border border-shrine-gold-500/40 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-shrine-terracotta-500">
                       {event.category}
                     </p>
-                    <h3 className="mt-1 font-display text-2xl text-shrine-maroon-700">{event.title}</h3>
+                    <h3 className="mt-1.5 font-display text-2xl text-shrine-maroon-700">{event.title}</h3>
                     <p className="mt-2 max-w-2xl text-sm leading-relaxed text-shrine-charcoal/80">
                       {event.description}
                     </p>
@@ -258,7 +258,7 @@ export function Home() {
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-shrine-gold-300">
               Come as you are
             </p>
-            <h2 className="mx-auto mt-5 max-w-2xl text-balance font-display text-4xl font-semibold sm:text-5xl">
+            <h2 className="mx-auto mt-5 max-w-2xl text-balance font-display text-4xl font-semibold text-shrine-cream sm:text-5xl">
               Admission is free. The invitation is older than the doors.
             </h2>
             <div className="mt-10 flex flex-wrap items-center justify-center gap-4">

@@ -53,4 +53,24 @@ describe("Accordion", () => {
     await user.keyboard("{End}");
     expect(btn3).toHaveFocus();
   });
+
+  it("open panel is exposed (no inert/aria-hidden) for the animation-ready 0fr-1fr grid", () => {
+    render(<Accordion items={items} />);
+    const openPanel = document.getElementById(screen.getByRole("button", { name: /Q1/ })!.getAttribute("aria-controls")!);
+    expect(openPanel).not.toHaveAttribute("inert");
+    expect(openPanel).not.toHaveAttribute("aria-hidden");
+    expect(openPanel?.className).toMatch(/grid-rows-\[1fr\]/);
+  });
+
+  it("closed panels are inert + aria-hidden so content is not focusable while collapsed", async () => {
+    const user = userEvent.setup();
+    render(<Accordion items={items} />);
+    await user.click(screen.getByRole("button", { name: /Q2/ }));
+    const closedPanel = document.getElementById(
+      screen.getByRole("button", { name: /Q1/ })!.getAttribute("aria-controls")!,
+    );
+    expect(closedPanel).toHaveAttribute("inert");
+    expect(closedPanel).toHaveAttribute("aria-hidden", "true");
+    expect(closedPanel?.className).toMatch(/grid-rows-\[0fr\]/);
+  });
 });

@@ -27,10 +27,10 @@ export function NewsEvents() {
           <div className="mt-12 divide-y divide-shrine-stone border-y border-shrine-stone">
             {upcomingEvents.map((event, index) => (
               <Reveal key={event.title} delay={index * 60}>
-                <article className="grid gap-6 py-10 lg:grid-cols-[12rem_1fr]">
+                <article className="grid gap-6 px-4 py-10 transition-colors duration-200 hover:bg-shrine-maroon-50/60 lg:grid-cols-[12rem_1fr]">
                   <div>
                     <p className="font-display text-xl text-shrine-maroon-600">{event.date}</p>
-                    <p className="mt-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-shrine-terracotta-500">
+                    <p className="mt-3 inline-block border border-shrine-gold-500/40 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-shrine-terracotta-500">
                       {event.category}
                     </p>
                   </div>
