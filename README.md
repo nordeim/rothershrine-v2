@@ -143,7 +143,7 @@ pnpm dev
 
 # 4 — Production build (single file + public assets)
 pnpm build
-# → dist/index.html  ~372 kB (gzip ~109 kB), JS+CSS inlined; dist/images/ copied from public/
+# → dist/index.html  ~384 kB (gzip ~112 kB), JS+CSS inlined; dist/images/ copied from public/
 
 # Preview prod build
 pnpm preview
@@ -168,7 +168,7 @@ ls -lh dist/index.html  # expect: single HTML file, no separate assets chunk
 | `pnpm typecheck` | Exit `0`, no errors |
 | `pnpm test` | `11 test files — 56 passed` |
 | `pnpm test:e2e` | `25 passed` (smoke 10 + navigation 6 + what-to-see 4 + give-faq 5, chromium) |
-| `pnpm build` | `dist/index.html` exists (~372 kB, gzip ~109 kB) + `dist/images/` |
+| `pnpm build` | `dist/index.html` exists (~384 kB, gzip ~112 kB) + `dist/images/` |
 | `pnpm preview` | Prod preview on `:4173`, all alias routes + `#hash` anchors navigate |
 
 ## Design System

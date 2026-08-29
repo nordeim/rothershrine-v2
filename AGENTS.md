@@ -30,10 +30,10 @@ All commands verified in `package.json` `scripts`. Don't document a script until
 ## Structure
 
 ```
-src/ (44 files: 32 source + 11 tests + 1 setup)
+src/ (45 files: 32 source + 11 tests + 1 setup + 1 css)
   App.tsx              # HashRouter + alias routes (see below)
   main.tsx             # StrictMode + createRoot
-  index.css            # @theme tokens (24 colors + 2 shadows) + @layer base/utilities (17: text-balance, bg-adobe-texture, bg-grain, divider-weave, divider-weave-thin, gold-rule, gold-rule-left, mask-fade-b, reveal, reveal-visible, skip-link, rise-in(+d1…d4), menu-in, drawer-in, dot-pulse, card-lift, link-underline)
+  index.css            # @theme tokens (24 colors + 2 shadows) + @layer base/utilities (17 distinct + hero-ken-burns ambient: text-balance, bg-adobe-texture, bg-grain, divider-weave, divider-weave-thin, gold-rule, gold-rule-left, mask-fade-b, reveal, reveal-visible, skip-link, rise-in(+d1…d4), menu-in, drawer-in, dot-pulse, card-lift, link-underline)
   components/          # Layout (+SkipLink, +BackToTop mount), Header (useScrolled(16), aria-current contract, menu-in/drawer-in), BackToTop (scrollY>480, 44px), Footer (link-underline), PageHero (staged rise-in), Emblem, Timeline (dot-pulse), SocialIcons, SafeImage (Pexels→local fallback), ui/{Button (external href → target=_blank + rel=noopener),Container,SectionHeading,Accordion (closed panels inert+aria-hidden),Reveal}
   hooks/               # useScrolled.ts (threshold 12 default; Header passes 16)
   pages/               # Home, AboutRother, History, WhatToSee, Pilgrimage, NewsEvents, Volunteer, Give, FAQ, NotFound (10 pages, named exports)

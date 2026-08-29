@@ -75,7 +75,7 @@ deploy: vite-plugin-singlefile → dist/index.html + dist/images/ → GH Pages /
 | Language | `typescript` / `@types/react` / `@types/react-dom` / `@types/node` | `5.9.3` / `19.2.18` / `19.2.5` / `22.20.1` | `strict` + `noUnusedLocals/Params` — breaches fail `tsc` |
 | Icons | `lucide-react` | `1.34.0` | Header/footer + `Home` quick-facts |
 | Utils | `clsx` / `tailwind-merge` | `2.1.1` / `3.6.0` | `cn()` = `twMerge(clsx(...))` — only merge path |
-| Bundling | `vite-plugin-singlefile` | `2.3.3` | Inlines JS+CSS into `dist/index.html` (~372 kB, gzip ~109 kB; `public/images/` → `dist/images/`) |
+| Bundling | `vite-plugin-singlefile` | `2.3.3` | Inlines JS+CSS into `dist/index.html` (~384 kB, gzip ~112 kB; `public/images/` → `dist/images/`) |
 | Fonts | Google Fonts (CDN, `index.html`) | — | `Fraunces` 400/500/600/700 + `Source Sans 3` 400/500/600/700; no runtime loader |
 
 > All versions pinned exact (no `^`) in `package.json` (`pnpm@11.0.0`, `engines: node>=20`). Re-pin on upgrade; `pnpm --frozen-lockfile` in CI verifies lockfile.
@@ -212,13 +212,13 @@ index.html (#root) → src/main.tsx (StrictMode+createRoot)
 
 No global store, no API layer, no `server/` — add only with an ADR.
 
-### 5.2 Directory Inventory (44 files in `src/` — 32 source .ts/.tsx + 11 tests + 1 setup + 1 css; + `e2e/` 4 specs + configs)
+### 5.2 Directory Inventory (45 files in `src/` — 32 source .ts/.tsx + 11 tests + 1 setup + 1 css; + `e2e/` 4 specs + configs)
 
 ```
-src/ (44 files)
+src/ (45 files)
   App.tsx                 # HashRouter + 16 Route entries (15 content paths + * NotFound; 6 legacy alias paths in 5 groups + 4 hash anchors)
   main.tsx                # StrictMode + createRoot + explicit #root guard
-  index.css               # @theme (24 colors + 2 shadows) + base + utilities (17 incl. Sacred Motion: rise-in(+d1…d4)/menu-in/drawer-in/dot-pulse/card-lift/link-underline)
+  index.css               # @theme (24 colors + 2 shadows) + base + utilities (17 distinct + hero-ken-burns ambient incl. Sacred Motion: rise-in(+d1…d4)/menu-in/drawer-in/dot-pulse/card-lift/link-underline)
   components/
     Layout.tsx            # Outlet + hash-aware scroll restoration (double-hash aware, 80ms timer cleared on route change) + SkipLink + BackToTop mount
     Header.tsx            # z-50 fixed maroon-950 bar (translucent + blur when scrolled; transparent at top of Home), useScrolled(16) (default 12), hover+click dropdown (menu-in), mobile drawer (drawer-in), aria-current contract (top-level `page`; dropdown parent `true` when child route active — desktop + mobile)
@@ -465,7 +465,7 @@ pnpm lint                      # 1 — eslint 9.39.5 flat --max-warnings 0
 pnpm typecheck                 # 2 — tsc --noEmit (strict + noUnusedLocals/Params)
 pnpm test                      # 3 — vitest 3.2.6 jsdom — 56 tests (11 files: cn 5, nav 6, content 5, site 4, Button 9, Accordion 6, SkipLink 3, SafeImage 3, BackToTop 7, Header 4, dark-band-contrast 4)
 pnpm test:e2e                  # 4 — playwright 1.55.1 chromium — 25 tests (4 specs: smoke 10, navigation 6, what-to-see 4, give-faq 5)
-pnpm build                     # 5 — singlefile 2.3.3 build → dist/index.html (~372 kB, gzip ~109 kB; + dist/images/ 4 files)
+pnpm build                     # 5 — singlefile 2.3.3 build → dist/index.html (~384 kB, gzip ~112 kB; + dist/images/ 4 files)
 pnpm preview &                 # 6 — smoke: spot-check 10 routes + 6 alias paths + 4 hash anchors
 ls -lh dist/                   # 7 — confirm dist/index.html + dist/images/ (publicDir copy expected — not inlined)
 # 8 — axe/Lighthouse a11y spot-check on Header + Home hero + FAQ
@@ -478,7 +478,7 @@ git push origin main           # 9 — deploy (GH Pages / S3 upload of dist/inde
 | Types | `pnpm typecheck` (`npx tsc --noEmit`) clean | `strict` + `noUnusedLocals`/`noUnusedParameters`/`noFallthroughCasesInSwitch`/`isolatedModules`/`noEmit` pass; `tsconfig.json` `include` covers `src`, `vite.config.ts`, `eslint.config.js`, `playwright.config.ts` |
 | Tests | `pnpm test` — 56 passed (11 files) | `vitest 3.2.6` `jsdom 26.1.0` + `setupFiles: ["src/test/setup.ts"]` (`@testing-library/react 16.2.0`, `@testing-library/jest-dom 6.6.3`) |
 | E2E | `pnpm test:e2e` — 25 passed (chromium, 4 specs) | `playwright 1.55.1` + `webServer` → `pnpm exec vite --port 5173 --host 127.0.0.1 --strictPort` + `expect.timeout: 15s` + `trace/video on failure`; `helpers.ts` shared |
-| Build | `pnpm build` greens | `viteSingleFile 2.3.3` inlines JS + CSS; `dist/images/` copied (not inlined) — ~372 kB (≤400 kB) |
+| Build | `pnpm build` greens | `viteSingleFile 2.3.3` inlines JS + CSS; `dist/images/` copied (not inlined) — ~384 kB (≤400 kB) |
 | Routes | All 10 pages + 6 alias paths + 4 hash anchors navigate (HashRouter) | Manual or `agent-browser` smoke (`Layout` double-hash aware `#/what-to-see#id` → split + 80ms) |
 | A11y | Contrast ≥4.5:1 on body, `alt` on content images (`SafeImage` fallback), `aria-expanded` on toggle, `SkipLink` | Spot-check per §8 table |
 | Visual | Hero gradients + `shadow-shrine`/`shadow-shrine-lg` + `divider-weave`/`divider-weave-thin` + `gold-rule`/`gold-rule-left` render | Preview comparison |
@@ -682,10 +682,11 @@ Tailwind defaults only (no custom config). Project usage:
 | Top | `z-[100]` | Skip-to-content link | `src/components/SkipLink.tsx` (`.skip-link` utility) | Always reachable above everything when focused |
 | High | `z-50` | `<header>` + its desktop dropdown | `src/components/Header.tsx` | Fixed nav above content + hero; dropdown inherits header stacking |
 | Mid | `z-40` | What-to-See jump nav (sticky under header) | `src/pages/WhatToSee.tsx` | Sticky section nav below the fixed header |
+| Mid | `z-40` | BackToTop (floating circular) | `src/components/BackToTop.tsx` | Fixed bottom-right, co-layer with jump nav (spatially separated: top vs bottom) |
 | Base | `z-auto` | `main`, `footer`, `PageHero` gradients | `src/components/Layout.tsx`, `Footer.tsx`, `PageHero.tsx` | Normal flow |
 | Portal | — | None yet | — | Add Radix/Portal table when modals exist |
 
-**Conflict rule:** `Header` owns `z-50`; jump nav stays below it at `z-40`; only the skip link may exceed them (`z-[100]`). Don't add competing layers without updating this table.
+**Conflict rule:** `Header` owns `z-50`; jump nav + BackToTop share `z-40` (opposite corners — top sticky vs bottom-right fixed — so no stacking conflict); only the skip link may exceed them (`z-[100]`). Don't add competing layers without updating this table.
 
 ---
 
@@ -928,4 +929,4 @@ This project follows **ANALYZE → PLAN → VALIDATE → IMPLEMENT → VERIFY �
 | Images | `public/images/*.jpg` (4 files → `dist/images/`) + Pexels CDN for hero/whatToSee + `images` export (onError→local via `SafeImage`) |
 | Vite alias + singlefile + watch/test | `vite.config.ts` (`@→src`, `viteSingleFile()`, `test.include/exclude`, `setupFiles: ["src/test/setup.ts"]`, `server.watch.ignored`) |
 | TS strict + include | `tsconfig.json` (`strict` + `noUnused*` + `include: ["src","vite.config.ts","eslint.config.js","playwright.config.ts"]` + `types: ["node","vitest/globals"]`) |
-| Pre-ship gate | `pnpm lint && pnpm typecheck && pnpm test (56/11) && pnpm test:e2e (25/4) && pnpm build` (~384kB/112kB + dist/images/ 4 files) → `pnpm preview` |
+| Pre-ship gate | `pnpm lint && pnpm typecheck && pnpm test (56/11) && pnpm test:e2e (25/4) && pnpm build` (~384 kB/112 kB + dist/images/ 4 files) → `pnpm preview` |

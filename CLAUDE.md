@@ -244,10 +244,10 @@ Primary artifact `dist/index.html` (+ `dist/images/` copied from `public/` — `
 ### Architecture
 
 ```
-src/ (44 files: 32 source + 11 tests + 1 setup)
+src/ (45 files: 32 source + 11 tests + 1 setup + 1 css)
   App.tsx                # HashRouter + route table: 16 Route entries (15 content paths + * NotFound), 6 legacy alias paths in 5 groups + 4 hash anchors
   main.tsx               # StrictMode + createRoot
-  index.css              # Tailwind v4 @theme (24 colors + 2 shadows) + @layer base/utilities (17 incl. rise-in(+d1…d4)/menu-in/drawer-in/dot-pulse/card-lift/link-underline)
+  index.css              # Tailwind v4 @theme (24 colors + 2 shadows) + @layer base/utilities (17 distinct + hero-ken-burns ambient incl. rise-in(+d1…d4)/menu-in/drawer-in/dot-pulse/card-lift/link-underline)
   components/
     Layout.tsx           # Outlet + double-hash scroll/hash restoration (split on # + strip / + 80ms timeout, timer cleared on route change) + BackToTop mount
     Header.tsx           # fixed + useScrolled(16) + desktop hover (openDesktopMenu, menu-in) + mobile drill-down (drawer-in) + aria-current contract (top-level `page`, dropdown parent `true` when child active) + hash-aware close
